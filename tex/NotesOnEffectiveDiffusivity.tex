@@ -1,0 +1,394 @@
+\documentclass[11pt]{article}
+
+%% WRY has commented out some unused packages %%
+%% If needed, activate these by uncommenting
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+%\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+\geometry{a4paper,left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+%\geometry{landscape}                % Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+
+\usepackage{natbib}
+
+%for figures
+%\usepackage{graphicx}
+
+\usepackage{color}
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+%% for graphics this one is also OK:
+\usepackage{epsfig}
+
+%% AMS mathsymbols are enabled with
+\usepackage{amssymb,amsmath}
+
+%% more options in enumerate
+\usepackage{enumerate}
+%\usepackage{enumitem}
+
+%% insert code
+\usepackage{listings}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{hyperref}
+
+%% To make really wide whats that cover everything:
+\usepackage{scalerel}
+\usepackage{stackengine}
+\stackMath
+\def\hatgap{2pt}
+\def\subdown{-2pt}
+\newcommand\what[2][]{%
+\renewcommand\stackalignment{l}%
+\stackon[\hatgap]{#2}{%
+\stretchto{%
+    \scalerel*[\widthof{$#2$}]{\kern-.6pt\bigwedge\kern-.6pt}%
+    {\rule[-\textheight/2]{1ex}{\textheight}}%WIDTH-LIMITED BIG WEDGE
+}{0.5ex}% THIS SQUEEZES THE WEDGE TO 0.5ex HEIGHT
+_{\smash{\belowbaseline[\subdown]{\scriptstyle#1}}}%
+}}
+
+% Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}}
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+
+%% colors
+\usepackage{graphicx,xcolor,lipsum}
+
+
+\usepackage{mathtools}
+
+\usepackage{graphicx}
+\newcommand*{\matminus}{%
+  \leavevmode
+  \hphantom{0}%
+  \llap{%
+    \settowidth{\dimen0 }{$0$}%
+    \resizebox{1.1\dimen0 }{\height}{$-$}%
+  }%
+}
+
+\newcommand{\So}{\mathcal{S}}
+\newcommand{\bvth}{\bar{\vth}}
+
+\title{Notes on Ocean Effective Diffusivities}
+\author{C. B. Rocha\thanks{Scripps Institution of Oceanography, University
+of California, San Diego. E-mail: crocha@ucsd.edu}\,\, \& W. R. Young}
+\date{\today}
+
+\begin{document}
+
+\include{symbols}
+
+\maketitle
+
+\section{The Advection-Diffusion Equation}
+
+\subsection{Preliminaries}
+We are concerned with the lateral advection and diffusion of a  passive scalar (tracer) $\vth$
+\beq
+\label{ad}
+\vth_t  + \vec{u}\cdot\nabla \vth =  \So + \kappa \lap \vth\com
+\eeq
+where $\So$ represents sources, $\kappa$ is the molecular diffusivity of the tracer $\vth$, and the horizontal laplacian
+is $\lap \defn \p_x^2 + \p_y^2$. Because the flow $\vec{u}$ is horizontally non-divergent, we define the streamfunction
+$\psi$ such that
+\beq
+\label{sf}
+u = -\psi_y\com \qquad \text{and} \qquad v = \psi_x\com
+\eeq
+and \eqref{ad} can be re-written 
+\beq
+\label{adsf}
+\vth_t  + \sJ(\psi,\vth) \vth =  \So + \kappa \lap \vth\com
+\eeq
+where the horizontal Jacobian is $\sJ(A,B) = A_x B_y - B_x A_y$.
+
+\subsection{X-averaged Equation}
+Introducing the Reynolds decomposition
+\begin{align}
+\label{rey}
+\vth(x,y,t) = \bvth(y,t) + \vth'(x,y,t)\com\nonumber \\
+\psi(x,y,t) = \bar{\psi}(y,t) + \psi'(x,y,t)\com \\
+\end{align}
+where
+\beq
+\bar{f}(y,t) = \frac{1}{L_x}\int_0^{L_x}\!\!\! f(x,y,t) \, \dd x\per
+\eeq
+With periodicity in $x$, the $x-$averaged $y-$velocity vanishes $\bar{v} = \bar{\psi}_x = 0$. 
+The $x-$averaged tracer equation is then
+\beq
+\label{xave_ad}
+\bvth_t  + \p_y(\overline{v' \vth'}) = \bar{S} + \kappa \p_y^2 \bvth\per
+\eeq
+For completeness, the equation for the perturbation about the $x-$averaged tracer is
+\beq
+\label{pad}
+\vth'_t + \p_x(u \vth') + \p_y(v' \vth') + \p_x (u'\bvth) + \p_y(v' \bvth) - \p_y(\overline{v'\vth'}) = S' + \kappa (\p_y^2 \vth' + \p_x^2\vth)\per
+\eeq
+
+
+Introducing an eddy-difussivity parameterization for the $y-$direction trace flux $\overline{v'\vth'}$
+\beq
+\label{eddy_visc}
+\overline{v'\vth'} = -K \p_y \bvth\com
+\eeq
+we obtain
+\beq
+\label{xave_ad_2}
+\bvth_t   = \bar{S} + D \p_y^2 \bvth\com
+\eeq
+where the effective diffusivity is $D \defn K + \kappa$.
+
+\subsection{Variance budget}
+With harmless boundary conditions (e.g., double periodicity or no-flux across the boundaries) the tracer variance
+equation is
+\beq
+\label{varvth}
+\frac{\dd}{\dd t}  \int \half \vth^2 \dd A = \int \vth \So \dd A - \kappa \int | \nabla \vth |^2 \dd A\per
+\eeq
+       
+
+%We can also write equations for the tracer variance $\bvth^2$
+%\beq
+%\label{varbvth}
+%\frac{\dd}{\dd t}  \int \half \bvth^2 \dd y = \int \overline{v'\vth'} \bvth_y \dd y + \int \bvth \bar{\So} \dd y - \kappa\!\! \int (\p_y \bvth)^2 \dd y\com
+%\eeq
+%and the tracer variance $\bar{\vth'}^2$
+%\beq
+%\label{varpvth}
+%\frac{\dd}{\dd t}  \int \half \vth'^2 \dd A =  -\int \overline{v'\vth'} \bvth_y \dd y   + \int \vth' \So' \dd A - \kappa \int \left[ |\nabla \vth' |^2 + \p_x \vth' \p_x \bvth \right] \dd A \per
+%\eeq
+
+
+\section{Renovated Waves on a Lattice}
+
+To begin exploring the accuracy of different methods to estimate ocean effective diffusivities,
+we use a simple advection-diffusion model on a lattice first proposed by Pierrehumbert (2000).
+The idea is to break the advection and difussion in different steps. The advection step is further
+separated in two substeps: advection in the x-direction and y-direction. The advection substeps are
+performed on a lattice. That is, the advection in the x-direction corresponds to a shift in the 
+x-direction, and the advection in the y-direction corresponds to a shift in the y-direction:
+\beq
+i_x^{n+1} = i_x^{n} - \text{int}\left(u_n(y) \dt \right)\com
+\eeq
+and
+\beq
+i_y^{n+1} = i_y^{n} - \text{int}\left(v_n(x) \dt \right)\com
+\eeq
+where the superscripts represent the iteration. Figure \ref{lattice}, adapted from Pierrehumbert, explains the advection steps better than any set of words.
+Notice that this ``advection-scheme'' exactly conserves the probability density of the tracer.
+
+We represent the velocity field as linear combination of waves with random phase:
+
+\beq
+\label{un}
+u_n(y) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi y}{L_y} j + \phi_n\right)\com
+\eeq
+\beq
+\label{vn}
+v_n(x) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi x}{L_x} j + \psi_n\right)\com
+\eeq
+where $L_x$ and $L_y$ are the dimensions of the periodic domain, $\psi_n$ and $\phi_n$ are random phases drawn from a uniform distribution on $[0, 2\pi]$. Because these random phases are changed every iteration, this simple velocity field is termed renovated wave model. Note that in this generalized renovated wave model the kinetic energy spectrum of the flow follows a $j^{-p}$ power-law. Also in \eqref{un} and \eqref{vn}, $C$ is a normalization constant, determined so that the root-mean square velocity is prescribed 
+\beq
+C = u_{rms}\left(\sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p}\right)^{-1/2}\per
+\eeq
+
+\begin{figure}[ht]
+    \label{lattice}
+    \centering
+    \includegraphics[width=\textwidth]{figs/lattice.png}
+    \caption{Schematic representing the advection substeps with single sinusoidal velocity fields. Adapted from
+    Pierrehumbert (2000).}
+\end{figure}
+
+Pierrehumbert performs the diffusion step in physical space, as a simple average of neighboring points, corresponding
+to a second-order finite-difference approximation for the laplacian operator. Here we take advantage of the periodicity
+of this model, and perform the diffusion step more accurately in Fourier space:
+\beq
+\label{diff}
+\hat{\vth}^{n+1}_{k,l} = \hat{\vth}^{n}_{k,l} \ee^{-\kappa(k^2+l^2)\dt}\per
+\eeq
+
+
+\subsection{Advection-diffusion with a simple large-scale source}
+
+We employ a simple large-scale source
+\beq
+S(y) = \cos \left(\frac{2 \pi}{L_y}y\right)\per
+\eeq
+Because the source is only a function of $y$, half of the source is performed after the $x-$advection
+substep
+\beq
+\label{source_x}
+\vth^{n+1/2} = \vth^{n+1/2} + \frac{\dt}{2} S(y)\per
+\eeq
+The other half of the source could be applied in the same fashion, after the $y-$advection
+substep
+\beq
+\label{source_y}
+\vth^{n+1} = \vth^{n+1} + \frac{\dt}{2} S(y)\per
+\eeq
+In principle \eqref{source_y} is a brutal way to apply the source since source term is not invariant in $y$.
+To apply the source more accurately, we note that in the ``$y$-advection''+``half-source'' substeps, we are
+solving
+\beq
+\vth_t + v(x) \vth_y = \cos \left(\frac{2 \pi}{L_y}y\right)\com
+\eeq
+which can be easily integrated along the characteristics $y = y_0 + v \dt/2$, to give
+\beq
+\label{adv_source_y}
+\vth(x,y,t+\dt) = \vth(x,y,\dt) + \frac{\sin\left[ k_1 (y_0 + v \dt/2 )\right] - \sin k_1 y_0}{k_1 v}\per
+\eeq
+where $k_1 \defn \frac{2\pi}{L_y}$. We anticipate loss of accuracy for in regions where $v\approx 0$. To
+avoid this inaccuracies, we identify these points numerically, and use the exact value in limit $\dt \to 0$.
+This limit can be calculated using the L'Hospital rule, simply expanding about $v=0$, to obtain
+\beq
+\frac{\sin\left[ k_1 (y_0 + v \dt/2 )\right] - \sin k_1 y_0}{k_1 v} \to \frac{\dt}{2}\cos k_1 y_0 \qquad \text{as}
+\qquad v \to 0\per
+\eeq
+
+
+In summary, the algorithm for this forced advection-diffusion problem on a lattice, every iteration is
+composed by the following substeps:
+\begin{enumerate}
+    \item $x-$advection
+    \item half source
+    \item $y-$advection + half source
+    \item diffusion
+\end{enumerate}
+Of course, one could break the diffusion step in two substeps, to be performed after the advection.
+In practice, there is no significant difference, and we opt to use the single step difusion above
+for computational efficiency. 
+
+\subsection{Did Einstein get it right?}
+For this simple model the $x-$averaged equation is
+\beq
+\label{xave_cos}
+\bvth_t   = \cos k_1 y + D \p_y^2 \bvth\com
+\eeq
+In statistical steady state, averaging either in time or over ensembles, we obtain
+\beq
+D \p_y^2\langle \bvth\rangle = -\cos k_1 y\com
+\eeq
+$\langle\rangle$ denotes either time or ensemble average. Thus,
+\beq
+\langle \bvth \rangle = \frac{\cos k_1 y}{D k_1^2}\per
+\eeq
+For this simple model, we can calculate the effective diffusivity $D$ exactly (Einstein, 1905)
+\beq
+\label{einstein_diff}
+D = \frac{\langle (\dx)^2 \rangle}{2 \dt}\com
+\eeq
+where $\langle (\dx)^2 \rangle$ is the mean-square displacement. Intrinsic in the derivation of
+\eqref{einstein_diff} is the scale separation between the flow that performs the  advection
+and the large-scale gradient. In the generalized RW model, we have
+\beq
+\langle (\dx)^2 \rangle = \langle u_n^2 (\dt)^2\rangle = \frac{u_{rms}^2 (\dt)^2}{4}\com
+\eeq
+and therefore
+\beq
+\label{Dein}
+D = \frac{u_{rms}^2 \dt}{4}\per
+\eeq
+
+Figure \ref{p35} shows a comparison between theory, using Einstein's effective difusivity
+\eqref{Dein}, and numerical calculation on the lattice model. With scale separation, there
+is spectacular agreement between theory and numerics (see Figure \ref{p35} left). Even
+the $x-$averaged concentration of snapshots is reasonably consistent with the theoretical prediction.
+Without scale separation, there is still reasonable consistency, but the spread about the time-mean
+is much larger.
+
+\begin{figure}[ht]
+    \label{p35}
+    \centering
+    \includegraphics[width=7cm]{figs/x-averaged_tracer_nmin_5.png}
+    \includegraphics[width=7cm]{figs/x-averaged_tracer_nmin_1.png}
+    \caption{$x-$averaged tracer concentration simulated with $N_x = N_y = 1024$, $L_x = L_y = 2 \pi$, 
+        $n_{min}=5$ (left) and $n_{min}=1$(right), $n_{max}=1024$, and $p=1024$. The magenta line represents time-averaged 
+            and the thin gray lines represent snapshots. The blue line is the theoretical prediction.}
+\end{figure}
+
+\subsection{Tracer variance spectrum}
+
+\begin{figure}[ht]
+    \label{p35}
+    \centering
+    \includegraphics[width=14cm]{figs/tracer_spectra.png}
+    \caption{Trace variance spectra as a function of $x-$wavenumber for two runs 
+             with $p=1.8$, $p = 3.5$, $p=10$, $\kappa=1.e-3$, $u_{rms}=1$, $n_{min}$=5. The $x-$average
+            trace concentration has been removed before calculating the spectrum.}
+\end{figure}
+
+
+\subsection{Dependence on molecular diffusivity}
+
+\begin{figure}[ht]
+    \label{p35}
+    \centering
+    \includegraphics[width=14cm]{figs/x-averaged_tracer_various_kappa.png}
+    \caption{Dependence of $x-$averaged tracer concentration on the numerical value of the molecular diffusivity.
+            As expected, the  $x-$averaged tracer concentration is nearly independent unless the molecular
+            diffusivity is too large.}
+\end{figure}
+
+
+  
+
+\section{Approximate Methods for Effective Diffusivity}
+These methods have the form
+
+\beq
+K = A^2 \kappa\com
+\eeq
+where $K$ is an approximation to the true diffusivity $D$, $\kappa$ is the molecular diffusivity, and $A^2$ is an amplification factor.
+
+\subsection{A variance budget approach: Osborn-Cox}
+\beq
+\label{koc}
+K_{oc} = \frac{\langle |\nabla \vth'|^2 \rangle}{\bar{\vth}_y^2}\kappa\per
+\eeq
+\subsection{Monitoring the lengthening of tracer contours: Nakamura}
+\beq
+\label{kN}
+K_{N} = \frac{L^2}{L_{min}^2}\kappa\per
+\eeq
+
+
+\end{document}

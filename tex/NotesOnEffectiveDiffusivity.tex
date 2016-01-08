@@ -160,7 +160,7 @@ The $x-$averaged tracer equation is then
 For completeness, the equation for the perturbation about the $x-$averaged tracer is
 \beq
 \label{pad}
-\vth'_t + \p_x(u \vth') + \p_y(v' \vth') + \p_x (u'\bvth) + \p_y(v' \bvth) - \p_y(\overline{v'\vth'}) = S' + \kappa (\p_y^2 \vth' + \p_x^2\vth)\per
+\vth'_t + \p_x(u' \vth') + \p_y(v' \vth') + \p_x (u'\bvth) + \p_y(v' \bvth) - \p_y(\overline{v'\vth'}) = S' + \kappa (\p_y^2 \vth' + \p_x^2\vth)\per
 \eeq
 
 
@@ -380,6 +380,26 @@ K = A^2 \kappa\com
 where $K$ is an approximation to the true diffusivity $D$, $\kappa$ is the molecular diffusivity, and $A^2$ is an amplification factor.
 
 \subsection{A variance budget approach: Osborn-Cox}
+Osborn-Cox employs a tracer variance budget approach to estimate the effective diffusivity. Multiplying \eqref{pad} and $x-$averaging, we obtain
+\beq
+\label{th2_ko}
+\frac{\dd}{\dd t} \frac{\overline{\vth'^2}}{2} +  \p_y \left(\overline{v' \frac{\vth'^2}{2}}\right) + 
+\overline{v' \vth'} \p_y \bvth = -\kappa \overline{ |\nabla \vth'|^2} + \kappa \p_y^2 \overline{\frac{\vth'^2}{2}}\per
+\eeq
+With the eddy diffusivity hypothesis, i.e.,
+\beq
+\label{eddy_diff_Koc}
+\overline{v' \vth'} = - K_{oc} \p_y \bvth\com
+\eeq
+we have, in statistical steady state,
+\beq
+\label{th2_ko}
+- \p_y \left(\overline{v' \frac{\vth'^2}{2}}\right) - 
+K_{oc} (\p_y \bvth)^2 =  - \kappa |\nabla \vth'|^2 + \kappa \p_y^2 \overline{\frac{\vth'^2}{2}}\per
+\eeq
+
+
+
 \beq
 \label{koc}
 K_{oc} = \frac{\langle |\nabla \vth'|^2 \rangle}{\bar{\vth}_y^2}\kappa\per

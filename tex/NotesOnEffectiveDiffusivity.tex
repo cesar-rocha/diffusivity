@@ -153,7 +153,7 @@ The introduction of the eddy diffusivity \eqref{eddy_visc} needs to be justified
 \bvth_t   = \bar{S} + \kappat \p_y^2 \bvth\com
 \eeq
 where the total diffusivity is $\kappat \defn \kappae + \kappa$. There is significant inconsistency in the literature regarding 
-notation and naming of eddy diffusivities.  The term ``effective diffusivity''  is used to refer to $\kappat$ by some authors. Other investigators refer to $\kappae$ as the ``effective diffusivity'' likely recognizing that for large Peclet number $\kappat \approx \kappae$. The term ``eddy diffusivity'' is equally used to refer to both $\kappat$ or $\kappae$.
+notation and naming of diffusivities.  The term ``effective diffusivity''  is used to refer to $\kappat$ by some authors. Other investigators refer to $\kappae$ as the ``effective diffusivity'' likely recognizing that for large Peclet number $\kappat \approx \kappae$. The term ``eddy diffusivity'' is equally used to refer to both $\kappat$ or $\kappae$.
 
 \subsection{Integral variance budget}
 With harmless boundary conditions (e.g., double periodicity or no-flux across the boundaries) the tracer variance
@@ -301,7 +301,7 @@ We now diagnose eddy diffusivities using both Osborn-Cox and Nakamura methods in
 \label{einstein_eddy_diffusivity}
 \kappa_{ein} = \frac{u_{rms}^2 \tau}{4}\per
 \eeq 
-
+Another important property of this model is that the scale separation between the mean tracer concentration and perturbations is infinite, and therefore the eddy diffusion closure is justified.
 
 
 
@@ -495,7 +495,7 @@ The mean square displacement is
 \beq
 \la  (\Delta y )^2\ra =  C^2 \sum_k \left( \frac{j}{j_{min}} \right)^{-p} \left[\frac{1- \cos\left(U k \tau/2\right)}{(Uk)^2}\right]\per
 \eeq
-Note that in the limit of small mean velocity, $Uk \tau/2 \to 0$, we obtain the diffusivity for the non-mean-flow case:
+Note that in the limit of small mean velocity, $Uk \tau/2 \to 0$, we obtain the mean-square displacement for the non-mean-flow case:
 \beq
 \la  (\Delta y )^2\ra = u_{rms}^2 \frac{\tau^2}{4}\per
 \eeq
@@ -517,20 +517,14 @@ so that
 \eeq
 
 \begin{figure}[ht]
-    \label{SnapAndCDF}
     \centering
     \includegraphics[width=8cm]{figs/snapshot_p_4.pdf}
     \includegraphics[width=7cm]{figs/fractional_area.pdf}
     \caption{\small (Left) A snapshot of tracer concentration $\vth$ from a simulation
     		of the RW model. (Right) The fractional area  of tracer concentration
 		satisfying $\vth\leq\Th$, that is, the cumulative distribution function of $\vth$.}
+		    \label{SnapAndCDF}
 \end{figure}
-
-%For simplicity, we assume x-periodic geometry.  First, we recall that $\dd \vth = 0$ along the contour $\Th$, hence
-%\beq
-%\frac{\p A}{\p t} = - \frac{\p \vth / \p t}{\p \theta / \p A}\Big)_{\Th}\per
-%\eeq
-
 
 \begin{figure}[ht]
     \label{SchematicsCoord}
@@ -585,12 +579,12 @@ Thus, using the advection-diffusion equation \eqref{ad}, we obtain
 Now using \eqref{useful_relations} we obtain
 \begin{align}
 \frac{\p \vth}{\p t} &= \kappa \frac{\p}{\p A} \iint \lap \vth \dd A + \frac{\p }{\p A} \iint S  \dd A \nonumber\\
-                     &= \frac{\p}{\p A}\left(K_{e}(A,t) \frac{\p \vth}{\p A}\right) + \langle S \rangle_\Th\com
+                     &= \frac{\p}{\p A}\left(K_n(A,t) \frac{\p \vth}{\p A}\right) + \langle S \rangle_\Th\com
 \end{align}
 where the effective diffusivity  is
 \beq
 \label{KeDefn}
-K_e (A, t) =  \frac{ \kappa \oint_\gamma |\nabla\vth| \dd l }{\p \vth/\p A} 
+K_n (A, t) =  \frac{ \kappa \oint_\gamma |\nabla\vth| \dd l }{\p \vth/\p A} 
         =  \kappa  \underbrace{\frac{\p A}{\p \Th}}_{\oint_\gamma \frac{\dd l}{|\nabla \vth|}} \oint_\gamma |\nabla\vth| \dd l 
         = \frac{\p A}{\p \Th}\frac{\p }{\p A} \iint_{\p A}  \kappa  |\nabla\vth|^2 \dd x \dd y = 
         \frac{\langle \kappa  |\nabla\vth|^2 \rangle_\Th}{ (\p \vth/\p A)^2} \per
@@ -598,7 +592,7 @@ K_e (A, t) =  \frac{ \kappa \oint_\gamma |\nabla\vth| \dd l }{\p \vth/\p A}
 Note that the effective diffusivity has units of (length)$^4$$\times$(time)$^{-1}$. The Nakamura eddy diffusivity is defined by
 \beq
 \label{knak}
-\kappa_{N}(\Th,t) = \frac{K_e}{L_{min}^2} = \frac{L_{eq}^2}{L_{min}^2}\kappa\com
+\kappaN(\Th,t) = \frac{K_e}{L_{min}^2} = \frac{L_{eq}^2}{L_{min}^2}\kappa\com
 \eeq
 where the equivalent length is
 \beq
@@ -606,7 +600,7 @@ where the equivalent length is
 L_{eq}^2 \defn \oint_\gamma \frac{\dd l}{|\nabla \vth|} \oint_\gamma |\nabla \vth| \dd l \com
 \eeq
 and $L_{min}$ is the minimum length of the contour (without distortion by eddies). In simple domain such as periodic channel,
- $L_{min}$ is unambiguously defined as the length of the channel. In more complicated realistic geometry and source functions, the definition of $L_{min}$ may not be straightforward. In practice, one can estimate $L_{min}$ by calculating $L_{eq}$ in simulations with large Peclet number ($\kappa_N \to \kappa$). 
+ $L_{min}$ is unambiguously defined as the length of the channel. In more complicated realistic geometry and source functions, the definition of $L_{min}$ may not be straightforward. In practice, one can estimate $L_{min}$ by calculating $L_{eq}$ in simulations with large Peclet number ($\kappaN \to \kappa$). 
 A lower bound on \eqref{Leq} is obtained using the Cauchy-Schwartz inequality\footnote{$\oint_\gamma f^2 \dd l \oint_\gamma g^2 \dd l \ge \left(\oint_\gamma f\,g \,\dd l\right)^2.$}:
 \beq
 L_{eq}^2 \ge L^2 = \Big(\oint_\gamma \dd l \Big)^2\per
@@ -620,10 +614,22 @@ where $\delta I_\theta(f)$ is the approximate area integral of $f$ within the co
 \beq
 \delta I_\Th(f) = \sum_j f \dd x \dd y\com \qquad \Th - \dd \Th/2 \leq \vth \leq \Th + \dd \Th/2 \com
 \eeq
- where the summation on $j$ represents the pixels within the contour. 
+ where the summation on $j$ represents the pixels within the contour. In practice the diagnostic is not very sensitive to the 
+ contour spacing $\dd \Th$.
  
  Finally note that the Nakamura diffusivity is a function of the the contour $\Th$ (or equivalently of the area bounded by the contour). With simple geometry of initial conditions and source function, $\kappa_N(\Th,t)$  can be mapped to physical space, e.g. as direction of the tracer gradient or the equivalent latitude. 
   
+  
+ \begin{figure}[ht]
+    \centering
+    \includegraphics[width=7.5cm]{figs/sensitivity_kappaN_dtheta.pdf}
+        \includegraphics[width=7.5cm]{figs/sensitivity_kappaN_mean_dtheta.pdf}\\
+    \caption{\small Sensitivity of the Nakamura diffusivity estimate to the contour spacing $\dd \Th$. In this example, the Nakamura eddy diffusivity was computed for a single snapshot in Figure \ref{SnapAndCDF} a.}
+        \label{SensitivitykNdTh}
+\end{figure}
+  
+  
+ 
 %\section{A more direct derivation}
 %Just average \eqref{ad} along the contour $\Th$ (i.e., using definition \eqref{defn_ave}) to obtain
 %

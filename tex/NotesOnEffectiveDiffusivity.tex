@@ -59,36 +59,7 @@ _{\smash{\belowbaseline[\subdown]{\scriptstyle#1}}}%
 \definecolor{deepred}{rgb}{0.6,0,0}
 \definecolor{deepgreen}{rgb}{0,0.5,0}
 
-% Python style for highlighting
-\newcommand\pythonstyle{\lstset{
-language=Python,
-basicstyle=\ttm,
-otherkeywords={self},             % Add keywords here
-keywordstyle=\ttb\color{deepblue},
-emph={MyClass,__init__},          % Custom highlighting
-emphstyle=\ttb\color{deepred},    % Custom highlighting style
-stringstyle=\color{deepgreen},
-frame=tb,                         % Any extra options here
-showstringspaces=false            % 
-}}
-
-% Python environment
-\lstnewenvironment{python}[1][]
-{
-\pythonstyle
-\lstset{#1}
-}
-{}
-
-% Python for external files
-\newcommand\pythonexternal[2][]{{
-\pythonstyle
-\lstinputlisting[#1]{#2}}}
-
-% Python for inline
-\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
-
-%% colors
+% colors
 \usepackage{graphicx,xcolor,lipsum}
 
 
@@ -104,10 +75,16 @@ showstringspaces=false            %
   }%
 }
 
+% commmand for this doc
 \newcommand{\So}{\mathcal{S}}
 \newcommand{\bvth}{\bar{\vth}}
+\newcommand{\kappat}{\kappa_{tot}}
+\newcommand{\kappae}{\kappa_{e}}
+\newcommand{\kappaN}{\kappa_{n}}
+\newcommand{\kappaoc}{\kappa_{oc}}
 
-\title{Notes on Ocean Effective Diffusivities}
+
+\title{Notes on Ocean Eddy Diffusivity}
 \author{C. B. Rocha\thanks{Scripps Institution of Oceanography, University
 of California, San Diego. E-mail: crocha@ucsd.edu}\,\, \& W. R. Young}
 \date{\today}
@@ -121,62 +98,64 @@ of California, San Diego. E-mail: crocha@ucsd.edu}\,\, \& W. R. Young}
 \section{The Advection-Diffusion Equation}
 
 \subsection{Preliminaries}
-We are concerned with the lateral advection and diffusion of a  passive scalar (tracer) $\vth$
+We are concerned with the lateral advection and diffusion of a  passive scalar (tracer). The evolution
+of the tracer concentration $\vth$ is governed by
 \beq
 \label{ad}
 \vth_t  + \vec{u}\cdot\nabla \vth =  \So + \kappa \lap \vth\com
 \eeq
 where $\So$ represents sources, $\kappa$ is the molecular diffusivity of the tracer $\vth$, and the horizontal laplacian
-is $\lap \defn \p_x^2 + \p_y^2$. Because the flow $\vec{u}$ is horizontally non-divergent, we define the streamfunction
-$\psi$ such that
-\beq
-\label{sf}
-u = -\psi_y\com \qquad \text{and} \qquad v = \psi_x\com
-\eeq
+is $\lap \defn \p_x^2 + \p_y^2$. The advection-diffusion equation above is also often written as 
 and \eqref{ad} can be re-written 
 \beq
 \label{adsf}
 \vth_t  + \sJ(\psi,\vth) \vth =  \So + \kappa \lap \vth\com
 \eeq
-where the horizontal Jacobian is $\sJ(A,B) = A_x B_y - B_x A_y$.
+where the horizontal Jacobian is $\sJ(A,B) = A_x B_y - B_x A_y$, and the streamfunction $\psi$, associated with the non-divergent flow $\vec{u}$, is defined by
+\beq
+\label{sf}
+u = -\psi_y\com \qquad \text{and} \qquad v = \psi_x\per
+\eeq
 
-\subsection{X-averaged Equation}
-Introducing the Reynolds decomposition
+\subsection{Zonnaly-averaged Equations}
+For application in simple periodic domain, it is convenient to introduce zonally-averaged equations. In more complicated geometries, similar decompositions can be achieved given a well-defined average, which in practice is a combination of time and space averaging. Introducing the Reynolds decomposition
 \begin{align}
 \label{rey}
-\vth(x,y,t) = \bvth(y,t) + \vth'(x,y,t)\com\nonumber \\
-\psi(x,y,t) = \bar{\psi}(y,t) + \psi'(x,y,t)\com \\
+\vth(x,y,t) = \la\vth\ra_x(y,t)+ \vth'(x,y,t)\com\nonumber \\
+\psi(x,y,t) = \la\psi\ra_x(y,t) + \psi'(x,y,t)\com \\
 \end{align}
 where
 \beq
-\bar{f}(y,t) = \frac{1}{L_x}\int_0^{L_x}\!\!\! f(x,y,t) \, \dd x\per
+\la f \ra_x(y,t) = \frac{1}{L_x}\int_0^{L_x}\!\!\! f(x,y,t) \, \dd x\per
 \eeq
 With periodicity in $x$, the $x-$averaged $y-$velocity vanishes $\bar{v} = \bar{\psi}_x = 0$. 
 The $x-$averaged tracer equation is then
 \beq
 \label{xave_ad}
-\bvth_t  + \p_y(\overline{v' \vth'}) = \bar{S} + \kappa \p_y^2 \bvth\per
+\p_t \la\vth\ra_x + \p_y \la v' \vth'\ra_x = \la S \ra_x + \kappa \p_y^2 \la\vth\ra_x\per
 \eeq
 For completeness, the equation for the perturbation about the $x-$averaged tracer is
 \beq
 \label{pad}
-\vth'_t + \p_x(u' \vth') + \p_y(v' \vth') + \p_x (u'\bvth) + \p_y(v' \bvth) - \p_y(\overline{v'\vth'}) = S' + \kappa (\p_y^2 \vth' + \p_x^2\vth)\per
+\vth'_t + \p_x(u' \vth') + \p_y(v' \vth') + \p_x (u'\la\vth\ra_x) + \p_y(v' \la\vth\ra_x) - \p_y \la v'\vth'\ra_x = S' + \kappa (\p_y^2 \vth' + \p_x^2\vth)\per
 \eeq
 
-
-Introducing an eddy-difussivity parameterization for the $y-$direction trace flux $\overline{v'\vth'}$
+\subsection{Eddy diffusion}
+This notes discusses different methods for estimating ocean eddy diffusivities. A common heuristic argument is parameterize eddy transport such as $\overline{v'\vth'}$ with a down-gradient
+ eddy-difussivity
 \beq
 \label{eddy_visc}
-\overline{v'\vth'} = -K \p_y \bvth\com
+\overline{v'\vth'} = -\kappae \p_y \bvth\per
 \eeq
-we obtain
+The introduction of the eddy diffusivity \eqref{eddy_visc} needs to be justified more formally. For now, it suffices to mention that  \eqref{eddy_visc} is a good approximation provided there is enough scale separation between the large-scale tracer gradient the eddy scales. Thus the parameterization \eqref{eddy_visc}  is used to close the zonally-averaged equation \eqref{xave_ad}:
 \beq
 \label{xave_ad_2}
-\bvth_t   = \bar{S} + D \p_y^2 \bvth\com
+\bvth_t   = \bar{S} + \kappat \p_y^2 \bvth\com
 \eeq
-where the effective diffusivity is $D \defn K + \kappa$.
+where the total diffusivity is $\kappat \defn \kappae + \kappa$. There is significant inconsistency in the literature regarding 
+notation and naming of eddy diffusivities.  The term ``effective diffusivity''  is used to refer to $\kappat$ by some authors. Other investigators refer to $\kappae$ as the ``effective diffusivity'' likely recognizing that for large Peclet number $\kappat \approx \kappae$. The term ``eddy diffusivity'' is equally used to refer to both $\kappat$ or $\kappae$.
 
-\subsection{Variance budget}
+\subsection{Integral variance budget}
 With harmless boundary conditions (e.g., double periodicity or no-flux across the boundaries) the tracer variance
 equation is
 \beq
@@ -199,31 +178,30 @@ equation is
 
 \section{Renovated Waves on a Lattice}
 
-To begin exploring the accuracy of different methods to estimate ocean effective diffusivities,
+To begin exploring the accuracy of different methods to estimate ocean eddy diffusivities,
 we use a simple advection-diffusion model on a lattice first proposed by Pierrehumbert (2000).
 The idea is to break the advection and difussion in different steps. The advection step is further
-separated in two substeps: advection in the x-direction and y-direction. The advection substeps are
+separated in two sub-steps: advection in the x-direction and y-direction. The advection sub-steps are
 performed on a lattice. That is, the advection in the x-direction corresponds to a shift in the 
 x-direction, and the advection in the y-direction corresponds to a shift in the y-direction:
 \beq
-i_x^{n+1} = i_x^{n} - \text{int}\left(u_n(y) \dt \right)\com
+i_x^{n+1} = i_x^{n} - \text{int}\left[u(y) \tau/2 \right]\com
 \eeq
 and
 \beq
-i_y^{n+1} = i_y^{n} - \text{int}\left(v_n(x) \dt \right)\com
+i_y^{n+1} = i_y^{n} - \text{int}\left[v(x) \tau/2 \right]\com
 \eeq
-where the superscripts represent the iteration. Figure \ref{lattice}, adapted from Pierrehumbert, explains the advection steps better than any set of words.
-Notice that this ``advection-scheme'' exactly conserves the probability density of the tracer.
+where the superscripts represent the iteration and $\tau$ is the length of the renovation cycle, typically a eddy-turnover timescale. Figure \ref{latticei} illustrates the advection sub-steps in a couple of renovation cycles.
+Clearly, a very complex tracer pattern emerges after a couple of renovation cycles. Notice that this advection scheme exactly conserves the probability density of the tracer if no diffusion is applied (the lattice is just re-combined).
 
-We represent the velocity field as linear combination of waves with random phase:
-
+In a slight generalization of Pierrehumbert's model, we represent the non-divergent velocity field as linear combination of a spectrum of waves with random phase:
 \beq
 \label{un}
-u_n(y) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi y}{L_y} j + \phi_n\right)\com
+u(y) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi y}{L_y} j + \phi_n\right)\com
 \eeq
 \beq
 \label{vn}
-v_n(x) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi x}{L_x} j + \psi_n\right)\com
+v(x) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi x}{L_x} j + \psi_n\right)\com
 \eeq
 where $L_x$ and $L_y$ are the dimensions of the periodic domain, $\psi_n$ and $\phi_n$ are random phases drawn from a uniform distribution on $[0, 2\pi]$. Because these random phases are changed every iteration, this simple velocity field is termed renovated wave model. Note that in this generalized renovated wave model the kinetic energy spectrum of the flow follows a $j^{-p}$ power-law. Also in \eqref{un} and \eqref{vn}, $C$ is a normalization constant, determined so that the root-mean square velocity is prescribed 
 \beq
@@ -231,11 +209,20 @@ C = u_{rms}\left(\sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p}\
 \eeq
 
 \begin{figure}[ht]
-    \label{lattice}
     \centering
-    \includegraphics[width=\textwidth]{figs/lattice.png}
-    \caption{Schematic representing the advection substeps with single sinusoidal velocity fields. Adapted from
-    Pierrehumbert (2000).}
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample1.png}
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample2.png}
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample3.png}\\
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample4.png}
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample5.png}
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample6.png}\\
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample7.png}
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample8.png}
+       \includegraphics[width=0.3\textwidth]{figs/AdvExample9.png}
+       \caption{\small The advection on the two-dimensional periodic lattice. Notice that a complex pattern starts to emerge
+    		after a couple of renovation cycles. With a bigger lattice, one no longer sees the pixel fragmentation,
+		and the differential advection results in strong filamentation.}
+		    \label{latticei}
 \end{figure}
 
 Pierrehumbert performs the diffusion step in physical space, as a simple average of neighboring points, corresponding
@@ -243,10 +230,85 @@ to a second-order finite-difference approximation for the laplacian operator. He
 of this model, and perform the diffusion step more accurately in Fourier space:
 \beq
 \label{diff}
-\hat{\vth}^{n+1}_{k,l} = \hat{\vth}^{n}_{k,l} \ee^{-\kappa(k^2+l^2)\dt}\per
+\hat{\vth}^{n+1/2}_{k,l} = \hat{\vth}^{n}_{k,l} \ee^{-\kappa(k^2+l^2)\tau/2}\per
 \eeq
 
+\subsection{Advection-diffusion with constant background tracer gradient}
+Instead of using a large-scale source, we implement a constant background gradient $G$,
+so that the tracer concentration equation is
+\beq
+\vth_t  + \vec{u}\cdot\nabla \vth + G v =  \kappa \lap \vth\per
+\eeq
 
+The $x-$averaged variance budget is
+\beq
+\label{xave_budget_Gy}
+\p_ t \la \half \vth \raxt +  \p_y \la \half v \vth^2 \raxt + G \la v \vth \raxt  = \p_y^2 \la \half \vth^2 \raxt -\kappa \la  |\nabla \vth|^2\raxt \per
+\eeq
+Because the background gradient is constant, the system is statistically homogeneous in $y$. Thus, in statistical steady state,
+the $x-$averaged variance budget \eqref{xave_budget_Gy} is exactly given by a balance between variance production and dissipation:
+\beq
+G \la v \vth \raxt  = -\kappa \la  |\nabla \vth|^2\raxt \per
+\eeq
+
+\subsubsection{The Osborn-Cox method}
+ 
+Cox and Osborn introduced an eddy diffusion closure for the tracer flux,
+\beq
+\label{oc_diff}
+\la v \vth \raxt = - \kappaoc G\com
+\eeq
+to obtain an explicit expression for the eddy diffusivity
+\beq
+\label{koc}
+\kappaoc(y) = \frac{\la |\nabla \vth|^2 \raxt}{G^2} \kappa\per
+\eeq
+Note that the Osborn-Cox eddy diffusivity is simply an amplification of the molecular diffusivity, with the amplification
+factor
+\beq
+A_{oc} = \frac{\la |\nabla \vth|^2 \raxt}{G^2}\per
+\eeq
+The amplification factor can be thought as a ratio of two length scales. In particular the perturbation of tracer scale as
+$\vth \sim l_{mix} G$, where $l_{mix}$ is a mixing-length scale. Gradients of $\vth$ occur on relatively small scales extending
+down to the Batchelor scale,
+\beq
+l_b = \left(\frac{\kappa}{S}\right)^{1/2}\com
+\eeq
+where $S$ is a characteristic scale of the rate of strain of the eddy field. Hence,
+\beq
+\label{Aoc_scaling}
+A_{oc} \sim \frac{l_{mix}^2}{l_{b}^2} \Longrightarrow \kappaoc \sim l_{mix}^2 S\per
+\eeq
+It is pleasing that the eddy diffusivity scaling \eqref{Aoc_scaling} is independent of the molecular diffusivity $\kappa$.
+
+\subsubsection{The Nakamura method}
+
+A different approach to estimating the eddy diffusivity is the method of Nakamura ). In particular, Nakamura showed that averaging the advection-diffusion equation \eqref{ad} along tracer contours eliminates the advective eddy transport. The transformed equation resemble a diffusion equation in area coordinate with diffusivity (see appendix A for a derivation of the method):
+\beq
+\label{kN}
+K_{n}(\Th, t) = L_{eq}^2 \kappa\com
+\eeq
+where $L_{eq}$ is the equivalent length of the contour. $K_N$ is an instantaneous measure of mixing as a function of each contour $\Th$; $K_n$it has units of (length)$^4$ (time$^{-1}$). The Nakamura eddy diffusivity is then defined as
+\beq
+\kappaN(\Th) = \la K_n\ra_t/L_{min}^2\com
+\eeq
+where $L_{min}$ is the minimum length of the contour ($L_x$ in this case). One generally maps the Nakamura diffusivity from 
+ contour $\Th$ to physical space $\Th = \Th(y)$ either using the structure of the background tracer concentration ($G y$) or by constructing a simple one-to-one map based on the distribution of the stirred tracer field.
+
+\subsubsection{RW model simulations}
+We now diagnose eddy diffusivities using both Osborn-Cox and Nakamura methods in reference simulations of the Renovated Waves (RW) model.  The RW model implemented with background constant tracer concentration $G$ is a plain-vanilla example of ``Statistically Homogeneous Isotropic Transport'' setup where the eddy diffusivity is given by Einstein's formula
+\beq
+\label{einstein_eddy_diffusivity}
+\kappa_{ein} = \frac{u_{rms}^2 \tau}{4}\per
+\eeq 
+
+
+
+
+
+
+
+% large scale source
 \subsection{Advection-diffusion with a simple large-scale source}
 
 We employ a simple large-scale source
@@ -284,7 +346,6 @@ This limit can be calculated using the L'Hospital rule, simply expanding about $
 \qquad v \to 0\per
 \eeq
 
-
 In summary, the algorithm for this forced advection-diffusion problem on a lattice, every iteration is
 composed by the following substeps:
 \begin{enumerate}
@@ -296,6 +357,9 @@ composed by the following substeps:
 Of course, one could break the diffusion step in two substeps, to be performed after the advection.
 In practice, there is no significant difference, and we opt to use the single step difusion above
 for computational efficiency. 
+
+
+
 
 \subsection{Did Einstein get it right?}
 For this simple model the $x-$averaged equation is
@@ -314,18 +378,18 @@ $\langle\rangle$ denotes either time or ensemble average. Thus,
 For this simple model, we can calculate the effective diffusivity $D$ exactly (Einstein, 1905)
 \beq
 \label{einstein_diff}
-D = \frac{\langle (\dx)^2 \rangle}{2 \dt}\com
+D = \frac{\langle (\dx)^2 \rangle}{2 \tau}\com
 \eeq
 where $\langle (\dx)^2 \rangle$ is the mean-square displacement. Intrinsic in the derivation of
 \eqref{einstein_diff} is the scale separation between the flow that performs the  advection
 and the large-scale gradient. In the generalized RW model, we have
 \beq
-\langle (\dx)^2 \rangle = \langle u_n^2 (\dt)^2\rangle = \frac{u_{rms}^2 (\dt)^2}{4}\com
+\langle (\dx)^2 \rangle = \langle u_n^2 \tau^2\rangle = \frac{u_{rms}^2 (\dt)^2}{4}\com
 \eeq
 and therefore
 \beq
 \label{Dein}
-D = \frac{u_{rms}^2 \dt}{4}\per
+D = \frac{u_{rms}^2 \tau}{4}\per
 \eeq
 
 Figure \ref{p35} shows a comparison between theory, using Einstein's effective difusivity
@@ -368,9 +432,6 @@ is much larger.
             diffusivity is too large.}
 \end{figure}
 
-
-  
-
 \section{Approximate Methods for Effective Diffusivity}
 These methods have the form
 
@@ -405,10 +466,179 @@ Osborn-Cox eddy diffusivity is
 K_{oc} = \frac{\overline{ |\nabla \vth'|^2}}{\bar{\vth}_y^2}\kappa\per
 \eeq
 \subsection{Monitoring the lengthening of tracer contours: Nakamura}
+
+See appendix A for a derivation.
+
 \beq
 \label{kN}
 K_{N} = \frac{L^2}{L_{min}^2}\kappa\per
 \eeq
+
+\section{Diffusion suppression by a mean flow}
+To study the suppression of eddy diffusivity by a mean flow, we simply add a constant zonal velocity to 
+\eqref{un} and \eqref{vn}. The $x-$advection on the lattice is only slightly changed:
+
+\begin{align}
+\dot{x} &= U + u(y)\com  [0,\tau/2] :  x= x_0 + [U + u(y)]\frac{\tau}{2}\per \nonumber \\
+\dot{y} &= 0\com   [0,\tau/2]  :             y = y_0\per
+\end{align}
+The $y$-advection is
+\begin{align}
+\dot{x} &= U + \com  [\tau/2,\tau] :  x= x_0 + U\tau/2\per \nonumber \\
+\dot{y} &= v(x)\com  [\tau/2,\tau]  :            \dot{y} =  v(x_0  + U \tau/2)\per
+\end{align}
+Hence
+\beq
+y = y_0 + C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \frac{1}{U k} \left[\sin\left(k (x + U \tau) j + \psi_j\right)-\sin\left(k (x + U \tau/2) j + \psi_j \right)\right]\com
+\eeq
+The mean square displacement is
+\beq
+\la  (\Delta y )^2\ra =  C^2 \sum_k \left( \frac{j}{j_{min}} \right)^{-p} \left[\frac{1- \cos\left(U k \tau/2\right)}{(Uk)^2}\right]\per
+\eeq
+Note that in the limit of small mean velocity, $Uk \tau/2 \to 0$, we obtain the diffusivity for the non-mean-flow case:
+\beq
+\la  (\Delta y )^2\ra = u_{rms}^2 \frac{\tau^2}{4}\per
+\eeq
+
+\clearpage
+
+\appendix
+
+\section{Derivation of Nakamura's Eddy Diffusivity}
+
+The Nakamura effective diffusivity arises when transforming the diffusion equation into a area/contour coordinate system, i.e. A = $A(\Th,t)$, where $A$ is the area bounded by the contour $\Th$ at time $t$. Because the area bounded by a contour $\Th$ is a well-defined graph, i.e. $\Th = \Th(A,t)$ (see figure \ref{SnapAndCDF}), we have
+\beq
+\Th = \vth[A(\Th,t),t]\com
+\eeq
+so that
+\beq
+\label{useful_relations}
+\frac{\p \vth}{\p A}A_t + \vth_t = 0 \qquad \text{and }\qquad  \frac{\p \vth}{\p A} \frac{\p A}{\p \Th} = 1\per
+\eeq
+
+\begin{figure}[ht]
+    \label{SnapAndCDF}
+    \centering
+    \includegraphics[width=8cm]{figs/snapshot_p_4.pdf}
+    \includegraphics[width=7cm]{figs/fractional_area.pdf}
+    \caption{\small (Left) A snapshot of tracer concentration $\vth$ from a simulation
+    		of the RW model. (Right) The fractional area  of tracer concentration
+		satisfying $\vth\leq\Th$, that is, the cumulative distribution function of $\vth$.}
+\end{figure}
+
+%For simplicity, we assume x-periodic geometry.  First, we recall that $\dd \vth = 0$ along the contour $\Th$, hence
+%\beq
+%\frac{\p A}{\p t} = - \frac{\p \vth / \p t}{\p \theta / \p A}\Big)_{\Th}\per
+%\eeq
+
+
+\begin{figure}[ht]
+    \label{SchematicsCoord}
+    \centering
+    \includegraphics[width=10cm]{figs/SchemaAreaCoordinates.png}
+    \caption{\small Schematics of the coordinate system defined by the the tracer contour $\vth=\Th$.}
+\end{figure}
+
+The integral of the scalar function $f$ over the surface inside curves $\gamma(\Th+\dd \Th/2)$ and $\gamma(\Th-\dd \Th/2)$ (see figure \ref{SchematicsCoord}) is
+
+\newcommand{\A}{\p A}
+
+\beq
+\label{area_int}
+\delta I_\Th(f) = \iint_{\A^+}\!\! f \, \dd x \dd y  - \iint_{\A^-}\!\! f \, \dd x \dd y  =   \delta \vth
+            \oint_{\gamma} f \frac{\dd l}{|\nabla \vth|}\per
+\eeq
+where $\A^+ = \A(\Th+\delta \Th/2)$ and $\A^-= \A(\Th-\delta \Th/2)$.
+Thus in the limit $\delta \Th \to 0$,
+\beq
+\frac{\p }{\p \Th}I_\Th(f) =\frac{\p}{\p \Th}  \iint_{\A}\!\! f \, \dd x \dd y   = \oint_{\gamma} f \frac{\dd l}{|\nabla \vth|}\per
+\eeq
+In particular, the specific case $f=1$ gives:
+\beq
+\label{dAdth}
+\frac{\p }{\p \Th}A =  \oint_{\gamma}  \frac{\dd l}{|\nabla \vth|}\com
+\eeq
+where the total area of the surface bounded by $\Th$ is $A = I_\Th(1)$. The thickness average of $f$ along the $\gamma(\Th)$ is defined by
+\beq
+\label{defn_ave}
+\langle f\rangle_\Th \defn  \frac{\oint_{\gamma} f \frac{\dd l}{|\nabla \vth|}}{\oint_{\gamma} \frac{\dd l}{|\nabla \vth|}} = \frac{\p }{\p A}I_\Th(f)\per
+\eeq
+
+With the results above, we are ready to transform the advection-diffusion equation onto a coordinate system defined by the countour $\Th$. First, we note that the rate of change of the  material surface A is given by
+\beq
+A_t =  \oint_\gamma \vu_c \cdot \hat{\vn} \, \dd l\com
+\eeq
+where the velocity of the contour, locally normal to the contour, is defined by
+\beq
+\vu_c = - \theta_t \frac{\nabla \theta}{|\nabla \theta|^2} = -  \frac{\theta_t}{|\nabla \theta|}\hat{\vn}\per
+\eeq
+Thus, using the advection-diffusion equation \eqref{ad}, we obtain
+\begin{align}
+\frac{\p A}{\p t} =  - \oint_\gamma \theta_t \, \frac{\dd l}{{|\nabla \theta|}} &= 
+                       \oint_\gamma \, \nabla \cdot (\vu \vth) \frac{\dd l}{{|\nabla \theta|}} 
+                      - \kappa \oint_\gamma \lap \vth   \frac{\dd l}{{|\nabla \theta|}} 
+                      - \oint_\gamma S  \frac{\dd l}{{|\nabla \theta|}}\nonumber \\
+                     & =  \frac{\p}{\p \Th}\underbrace{\iint \nabla \cdot (\vu \vth) \dd A}_{=0}
+                        -  \kappa  \frac{\p}{\p \Th}\underbrace{\iint \lap \vth \dd A}_{=\oint |\nabla\vth|^2\frac{\dd l}{|\nabla \vth|}}
+                        -  \frac{\p}{\p \Th}\iint S  \dd A  \per
+\end{align}
+Now using \eqref{useful_relations} we obtain
+\begin{align}
+\frac{\p \vth}{\p t} &= \kappa \frac{\p}{\p A} \iint \lap \vth \dd A + \frac{\p }{\p A} \iint S  \dd A \nonumber\\
+                     &= \frac{\p}{\p A}\left(K_{e}(A,t) \frac{\p \vth}{\p A}\right) + \langle S \rangle_\Th\com
+\end{align}
+where the effective diffusivity  is
+\beq
+\label{KeDefn}
+K_e (A, t) =  \frac{ \kappa \oint_\gamma |\nabla\vth| \dd l }{\p \vth/\p A} 
+        =  \kappa  \underbrace{\frac{\p A}{\p \Th}}_{\oint_\gamma \frac{\dd l}{|\nabla \vth|}} \oint_\gamma |\nabla\vth| \dd l 
+        = \frac{\p A}{\p \Th}\frac{\p }{\p A} \iint_{\p A}  \kappa  |\nabla\vth|^2 \dd x \dd y = 
+        \frac{\langle \kappa  |\nabla\vth|^2 \rangle_\Th}{ (\p \vth/\p A)^2} \per
+\eeq
+Note that the effective diffusivity has units of (length)$^4$$\times$(time)$^{-1}$. The Nakamura eddy diffusivity is defined by
+\beq
+\label{knak}
+\kappa_{N}(\Th,t) = \frac{K_e}{L_{min}^2} = \frac{L_{eq}^2}{L_{min}^2}\kappa\com
+\eeq
+where the equivalent length is
+\beq
+\label{Leq}
+L_{eq}^2 \defn \oint_\gamma \frac{\dd l}{|\nabla \vth|} \oint_\gamma |\nabla \vth| \dd l \com
+\eeq
+and $L_{min}$ is the minimum length of the contour (without distortion by eddies). In simple domain such as periodic channel,
+ $L_{min}$ is unambiguously defined as the length of the channel. In more complicated realistic geometry and source functions, the definition of $L_{min}$ may not be straightforward. In practice, one can estimate $L_{min}$ by calculating $L_{eq}$ in simulations with large Peclet number ($\kappa_N \to \kappa$). 
+A lower bound on \eqref{Leq} is obtained using the Cauchy-Schwartz inequality\footnote{$\oint_\gamma f^2 \dd l \oint_\gamma g^2 \dd l \ge \left(\oint_\gamma f\,g \,\dd l\right)^2.$}:
+\beq
+L_{eq}^2 \ge L^2 = \Big(\oint_\gamma \dd l \Big)^2\per
+\eeq
+While the equivalent length notation above provides a useful interpretation, in practice  one does not compute
+line integrals. Instead, the third equality in \eqref{KeDefn} suggests a straightforward numerical approximation
+\beq
+K_e(\Th,t) \approx \frac{\delta I_\Th(1)}{(\delta \Th)^2} \delta I_\Th(\kappa |\nabla \vth|^2) \com 
+\eeq
+where $\delta I_\theta(f)$ is the approximate area integral of $f$ within the contours $\Th + \dd \Th/2$ and $\Th - \dd \Th/2$ (see figure 5). These approximate integrals are computed simply by counting pixels:
+\beq
+\delta I_\Th(f) = \sum_j f \dd x \dd y\com \qquad \Th - \dd \Th/2 \leq \vth \leq \Th + \dd \Th/2 \com
+\eeq
+ where the summation on $j$ represents the pixels within the contour. 
+ 
+ Finally note that the Nakamura diffusivity is a function of the the contour $\Th$ (or equivalently of the area bounded by the contour). With simple geometry of initial conditions and source function, $\kappa_N(\Th,t)$  can be mapped to physical space, e.g. as direction of the tracer gradient or the equivalent latitude. 
+  
+%\section{A more direct derivation}
+%Just average \eqref{ad} along the contour $\Th$ (i.e., using definition \eqref{defn_ave}) to obtain
+%
+%\beq
+%\underbrace{\frac{\p}{\p A} \iint \vth_t \dd A}_{=\frac{\p \Th}{\p A}\frac{\p}{\p \Th} \iint \vth_t \dd A = \frac{\p \Th}{\p A} \oint \vth_t \dd A} =  \frac{\p}{\p A}\left(K_{e}(A,t) \frac{\p \Th}{\p A}\right) + \langle S \rangle_\Th  \per
+%\eeq
+%Because 
+%\beq
+%\frac{\p A}{\p t} =  - \oint \theta_t \, \frac{\dd l}{{|\nabla \theta|}}\com
+%\eeq
+%we obtain, using \eqref{ThtoA},
+%\beq
+%\label{ad_area}
+%\frac{\p \Th}{\p t} = \frac{\p}{\p A}\left(K_{e}(A,t) \frac{\p \Th}{\p A}\right) + \langle S \rangle_\Th\per
+%\eeq
 
 
 \end{document}

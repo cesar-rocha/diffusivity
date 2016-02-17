@@ -197,15 +197,15 @@ Clearly, a very complex tracer pattern emerges after a couple of renovation cycl
 In a slight generalization of Pierrehumbert's model, we represent the non-divergent velocity field as linear combination of a spectrum of waves with random phase:
 \beq
 \label{un}
-u(y) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi y}{L_y} j + \phi_n\right)\com
+u(y) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi y}{L_y} j + \phi_j\right)\com
 \eeq
 \beq
 \label{vn}
-v(x) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi x}{L_x} j + \psi_n\right)\com
+v(x) = C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!\! \cos\left(\frac{2\pi x}{L_x} j + \psi_j\right)\com
 \eeq
 where $L_x$ and $L_y$ are the dimensions of the periodic domain, $\psi_n$ and $\phi_n$ are random phases drawn from a uniform distribution on $[0, 2\pi]$. Because these random phases are changed every iteration, this simple velocity field is termed renovated wave model. Note that in this generalized renovated wave model the kinetic energy spectrum of the flow follows a $j^{-p}$ power-law. Also in \eqref{un} and \eqref{vn}, $C$ is a normalization constant, determined so that the root-mean square velocity is prescribed 
 \beq
-C = u_{rms}\left(\sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p}\right)^{-1/2}\per
+C = 2 u_{rms}\left(\sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p}\right)^{-1/2}\per
 \eeq
 
 \begin{figure}[ht]
@@ -251,7 +251,30 @@ the $x-$averaged variance budget \eqref{xave_budget_Gy} is exactly given by a ba
 G \la v \vth \raxt  = -\kappa \la  |\nabla \vth|^2\raxt \per
 \eeq
 
-\subsubsection{The Osborn-Cox method}
+\subsection{Spectral characteristics of RW simulations}
+Our main interest is to use the lattice model to understand the potential biases and limitations of different methods
+to estimate eddy diffusivities, with particular attention to the dependence on the kinetic energy spectral slope. While the
+RW is simple enough to allow us to calculate its diffusivity exactly, its simulations display many characteristic of stirring
+and mixing by turbulent flows. In particular, the tracer dynamics dependence on the characteristics of the flow is well-represented in the RW model. Figure \ref{Spectra8192} shows spectra from two $8192\times8192$ RW simulations.
+With steep kinetic energy spectrum $k^{-4}$ (c), the tracer stirring is spectrally non-local (dominated by the energy containing eddies $k_{min} = 1$). The tracer variance spectrum is very shallow, approximately following a $k^{-1}$ power law across all
+scales. In contrast, with shallow kinetic energy spectrum $k^{-2}$ (a), the tracer stirring is spectrally local, and the tracer variance spectrum approximately follow the same power law as the kinetic energy spectrum $k^{-2}$. At about the maximum wavenumber of the flow (the smallest stirring scale; $k_{max}=150$), the tracer variance spectrum transitions to $k^{-1}$,
+Batchelor spectrum (see Vallis 2006; Scott 2006).
+
+\begin{figure}[ht]
+    \centering
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_ke_spectrum_p_2.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_ke_spectrum_p_4.pdf}\\
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_tracer_spectrum_p_2.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_tracer_spectrum_p_4.pdf}
+       \caption{\small Kinetic energy spectra (a and c) and tracer variance spectra (b and d)  from RW simulations with different
+       				spectral slopes of the kinetic energy. The simulations were run with same level of energy ($u_{rms}^2/2$)
+				on a $8192\times8192$ lattice. In this experiments, the minimum stirring wavenumber is $k_{min}=1$ and
+				the maximum stirring wavenumber is $k_{max}=150$.}
+		    \label{Spectra8192}
+\end{figure}
+
+
+\subsection{The Osborn-Cox method}
  
 Cox and Osborn introduced an eddy diffusion closure for the tracer flux,
 \beq
@@ -281,29 +304,48 @@ A_{oc} \sim \frac{l_{mix}^2}{l_{b}^2} \Longrightarrow \kappaoc \sim l_{mix}^2 S\
 \eeq
 It is pleasing that the eddy diffusivity scaling \eqref{Aoc_scaling} is independent of the molecular diffusivity $\kappa$.
 
-\subsubsection{The Nakamura method}
+\subsection{The Nakamura method}
 
 A different approach to estimating the eddy diffusivity is the method of Nakamura ). In particular, Nakamura showed that averaging the advection-diffusion equation \eqref{ad} along tracer contours eliminates the advective eddy transport. The transformed equation resemble a diffusion equation in area coordinate with diffusivity (see appendix A for a derivation of the method):
 \beq
 \label{kN}
 K_{n}(\Th, t) = L_{eq}^2 \kappa\com
 \eeq
-where $L_{eq}$ is the equivalent length of the contour. $K_N$ is an instantaneous measure of mixing as a function of each contour $\Th$; $K_n$it has units of (length)$^4$ (time$^{-1}$). The Nakamura eddy diffusivity is then defined as
+where $L_{eq}$ is the equivalent length of the contour. $K_N$ is an instantaneous measure of mixing as a function of each contour $\Th$; $K_n$it has units of (length)$^4$ (time)$^{-1}$. The Nakamura eddy diffusivity is then defined as
 \beq
 \kappaN(\Th) = \la K_n\ra_t/L_{min}^2\com
 \eeq
 where $L_{min}$ is the minimum length of the contour ($L_x$ in this case). One generally maps the Nakamura diffusivity from 
  contour $\Th$ to physical space $\Th = \Th(y)$ either using the structure of the background tracer concentration ($G y$) or by constructing a simple one-to-one map based on the distribution of the stirred tracer field.
 
-\subsubsection{RW model simulations}
+\subsection{RW model simulations}
 We now diagnose eddy diffusivities using both Osborn-Cox and Nakamura methods in reference simulations of the Renovated Waves (RW) model.  The RW model implemented with background constant tracer concentration $G$ is a plain-vanilla example of ``Statistically Homogeneous Isotropic Transport'' setup where the eddy diffusivity is given by Einstein's formula
+\beq
+\label{einstein_eddy_diffusivity}
+\kappa_{ein} = \frac{\la (\Delta x)^2\ra}{2\tau}\per
+\eeq 
+In the RW model we have
+\beq
+\label{dxdt}
+\frac{\dd x}{\dd t} = u(y)\com
+\eeq
+with $u(y)$ given by the series \eqref{un}. Hence
+\beq
+\label{dx2}
+\la (\Delta x)^2 \ra = \la (x - x_0)^2 \ra = u_{rms}^2 \tau^2 \la \cos (l y + \psi_j) \ra_{\psi} = \frac{u_{rms}^2 \tau^2}{2}\per 
+\eeq
+Thus
 \beq
 \label{einstein_eddy_diffusivity}
 \kappa_{ein} = \frac{u_{rms}^2 \tau}{4}\per
 \eeq 
-Another important property of this model is that the scale separation between the mean tracer concentration and perturbations is infinite, and therefore the eddy diffusion closure is justified.
+Of course, in this case, the isotropic velocity field implies $\la (\Delta y)^2\ra = \la (\Delta y)^2\ra$ and the diffusivity is independent of direction.
 
+Another important property of this model with constant background tracer gradient is that the scale separation between the mean tracer concentration and perturbations is infinite, and therefore the eddy diffusion closure is well justified.
 
+\subsection{Some results}
+
+Here we present results from two simulations akin of those figure \ref{Spectra8192} but with coarse resolution ($1024\times1024$).
 
 
 
@@ -346,22 +388,22 @@ This limit can be calculated using the L'Hospital rule, simply expanding about $
 \qquad v \to 0\per
 \eeq
 
-In summary, the algorithm for this forced advection-diffusion problem on a lattice, every iteration is
-composed by the following substeps:
-\begin{enumerate}
-    \item $x-$advection
-    \item half source
-    \item $y-$advection + half source
-    \item diffusion
-\end{enumerate}
-Of course, one could break the diffusion step in two substeps, to be performed after the advection.
-In practice, there is no significant difference, and we opt to use the single step difusion above
-for computational efficiency. 
+%In summary, the algorithm for this forced advection-diffusion problem on a lattice, every iteration is
+%composed by the following substeps:
+%\begin{enumerate}
+%    \item $x-$advection
+%    \item half source
+%    \item $y-$advection + half source
+%    \item diffusion
+%\end{enumerate}
+%Of course, one could break the diffusion step in two substeps, to be performed after the advection.
+%In practice, there is no significant difference, and we opt to use the single step difusion above
+%for computational efficiency. 
 
 
 
 
-\subsection{Did Einstein get it right?}
+\subsection{Mean tracer concentration}
 For this simple model the $x-$averaged equation is
 \beq
 \label{xave_cos}
@@ -409,71 +451,7 @@ is much larger.
             and the thin gray lines represent snapshots. The blue line is the theoretical prediction.}
 \end{figure}
 
-\subsection{Tracer variance spectrum}
-
-\begin{figure}[ht]
-    \label{p35}
-    \centering
-    \includegraphics[width=14cm]{figs/tracer_spectra.png}
-    \caption{Trace variance spectra as a function of $x-$wavenumber for two runs 
-             with $p=1.8$, $p = 3.5$, $p=10$, $\kappa=1.e-3$, $u_{rms}=1$, $n_{min}$=5. The $x-$average
-            trace concentration has been removed before calculating the spectrum.}
-\end{figure}
-
-
-\subsection{Dependence on molecular diffusivity}
-
-\begin{figure}[ht]
-    \label{p35}
-    \centering
-    \includegraphics[width=14cm]{figs/x-averaged_tracer_various_kappa.png}
-    \caption{Dependence of $x-$averaged tracer concentration on the numerical value of the molecular diffusivity.
-            As expected, the  $x-$averaged tracer concentration is nearly independent unless the molecular
-            diffusivity is too large.}
-\end{figure}
-
-\section{Approximate Methods for Effective Diffusivity}
-These methods have the form
-
-\beq
-K = A^2 \kappa\com
-\eeq
-where $K$ is an approximation to the true diffusivity $D$, $\kappa$ is the molecular diffusivity, and $A^2$ is an amplification factor.
-
-\subsection{A variance budget approach: Osborn-Cox}
-Osborn-Cox employs a tracer variance budget approach to estimate the effective diffusivity. Multiplying \eqref{pad} and $x-$averaging, we obtain
-\beq
-\label{th2_ko}
-\frac{\dd}{\dd t} \frac{\overline{\vth'^2}}{2} +  \p_y \left(\overline{v' \frac{\vth'^2}{2}}\right) + 
-\overline{v' \vth'} \p_y \bvth = -\kappa \overline{ |\nabla \vth'|^2} + \kappa \p_y^2 \overline{\frac{\vth'^2}{2}}\per
-\eeq
-With the eddy diffusivity hypothesis, i.e.,
-\beq
-\label{eddy_diff_Koc}
-\overline{v' \vth'} = - K_{oc} \p_y \bvth\com
-\eeq
-we have, in statistical steady state,
-\beq
-\label{th2_ko_2}
-+ \p_y \left(\overline{v' \frac{\vth'^2}{2}}\right) - 
-K_{oc} (\p_y \bvth)^2 =  - \kappa \overline{|\nabla \vth'|^2} + \kappa \p_y^2 \overline{\frac{\vth'^2}{2}}\per
-\eeq
-
-The Osborn-Cox approach ignores the first term on the left and the last term on the right of \eqref{th2_ko_2}, so that the
-Osborn-Cox eddy diffusivity is
-\beq
-\label{koc}
-K_{oc} = \frac{\overline{ |\nabla \vth'|^2}}{\bar{\vth}_y^2}\kappa\per
-\eeq
-\subsection{Monitoring the lengthening of tracer contours: Nakamura}
-
-See appendix A for a derivation.
-
-\beq
-\label{kN}
-K_{N} = \frac{L^2}{L_{min}^2}\kappa\per
-\eeq
-
+\
 \section{Diffusion suppression by a mean flow}
 To study the suppression of eddy diffusivity by a mean flow, we simply add a constant zonal velocity to 
 \eqref{un} and \eqref{vn}. The $x-$advection on the lattice is only slightly changed:
@@ -484,7 +462,7 @@ To study the suppression of eddy diffusivity by a mean flow, we simply add a con
 \end{align}
 The $y$-advection is
 \begin{align}
-\dot{x} &= U + \com  [\tau/2,\tau] :  x= x_0 + U\tau/2\per \nonumber \\
+\dot{x} &= U  \com  [\tau/2,\tau] :  x= x_0 + U\tau/2\per \nonumber \\
 \dot{y} &= v(x)\com  [\tau/2,\tau]  :            \dot{y} =  v(x_0  + U \tau/2)\per
 \end{align}
 Hence
@@ -493,16 +471,127 @@ y = y_0 + C \sum_{j=j_{min}}^{j_{max}} \left(\frac{j}{j_{min}}\right)^{-p/2}\!\!
 \eeq
 The mean square displacement is
 \beq
-\la  (\Delta y )^2\ra =  C^2 \sum_k \left( \frac{j}{j_{min}} \right)^{-p} \left[\frac{1- \cos\left(U k \tau/2\right)}{(Uk)^2}\right]\per
+\la  (\Delta y )^2\ra =  C^2 \sum_j \left( \frac{j}{j_{min}} \right)^{-p} \left[\frac{1- \cos\left(U k \tau/2\right)}{(Uk)^2}\right]\per
 \eeq
 Note that in the limit of small mean velocity, $Uk \tau/2 \to 0$, we obtain the mean-square displacement for the non-mean-flow case:
 \beq
-\la  (\Delta y )^2\ra = u_{rms}^2 \frac{\tau^2}{4}\per
+\la  (\Delta y )^2\ra = u_{rms}^2 \frac{\tau^2}{2}\per
 \eeq
+We can then define the nondimensional parameter
+\beq
+\label{betah}
+\beta(U,p,j_{min},j_{max}) = \frac{C^2 \sum_j \left(\frac{j}{j_{min}}\right)^{-p}\left(\frac{1-\cos(U k \tau/2)}{(U k)^2}\right)}{u_{rms}^2 \frac{\tau^2}{2}} =  \frac{2  \sum_j \left(\frac{j}{j_{min}}\right)^{-p}\left(\frac{1-\cos(U k \tau/2)}{(U k \tau/2)^2}\right)}{\sum_j \left(\frac{j}{j_{min}}\right)^{-p}} \com
+\eeq
+which is a measure of suppression (no suppression with $\beta=1$, full suppression with $\beta=0$).  Figure \ref{Supression}
+shows $\beta$ as a function of the mean flow speed $U$ and the kinetic energy spectrum exponent  $p$ for different maximum
+wavenumber $j_{max}$. Flows with shallow kinetic energy spectrum are significantly suppressed by the mean flow. This is 
+because for these flows, the small scales dominate the stirring, but the small scale eddies are significantly sweep by the mean flow. In this local stirring regime, the relevant bulk non-dimensional number is
+\beq
+\label{ukmax}
+U k_{max} \tau/2\com
+\eeq
+which can large even when $U$ is very small. On the other hand, flows with steep kinetic energy spectrum, the stirring is non-local and the relevant bulk non-dimensional parameter is
+\beq
+\label{ukmax}
+U k_{min} \tau/2\com
+\eeq
+ and the eddy turn-over time scale of the energy containing eddies relatively large compared to the mean advective time-scale, so that a significantly large mean flow is necessary to suppress the eddy diffusivity.
+ 
+ Figure \ref{Suppresion2} shows the $\beta$ as a function of wavenumber and mean flow speed, that is
+ \beq
+\label{betak}
+\beta(U,k) =   \frac{2  \sum_{j} \left(\frac{j}{j_{min}}\right)^{-p}\left(\frac{1-\cos(U k \tau/2)}{(U k \tau/2)^2}\right)}{\sum_j \left(\frac{j}{j_{min}}\right)^{-p}} \com
+\eeq
+where $k = 2\pi j /L_x $, and $p$ is prescribed. Consistent with the discussion above, the eddy diffusivity at high wavenumbers are significantly more suppressed in flows with shallow kinetic energy spectrum.
+
+ \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.45\textwidth]{figs/beta_U_p_150.pdf}
+    \includegraphics[width=.45\textwidth]{figs/beta_U_p_1024.pdf}\\
+       \hspace{-.08\textwidth} \includegraphics[width=.4\textwidth]{figs/beta_U_150.pdf}
+   \hspace{.03\textwidth}  \includegraphics[width=.4\textwidth]{figs/beta_U_1024.pdf}\\
+    \caption{\small The parameter ratio of eddy diffusivity with mean flow relative to no-mean-flow eddy diffusivity.
+    			  (Upper panels) Contours of $\beta$ as a function of the mean flow ($U$) and kinetic energy exponent ($p$),
+			  with $k_{max} = 150$ (left) and $k_{max}=1024$ (right).
+			  (Lower panels) A cut through the relevant exponents $p=2$ and $p=4$.}
+        \label{Suppresion}
+\end{figure}
+
+ \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.45\textwidth]{figs/betak_U_p_2.pdf}
+    \includegraphics[width=.45\textwidth]{figs/betak_U_p_4.pdf}\\
+       \hspace{-.08\textwidth} \includegraphics[width=.4\textwidth]{figs/betak_p_2.pdf}
+   \hspace{.03\textwidth}  \includegraphics[width=.4\textwidth]{figs/betak_p_4.pdf}\\
+    \caption{\small The parameter ratio of eddy diffusivity with mean flow relative to no-mean-flow eddy diffusivity.
+    			  (Upper panels) Contours of $\beta$ as a function of the mean flow ($U$) and wavenumber for two kinetic
+			  energy spectral exponents: $p=2$ (left) and $p=4$ (right).
+			  (Lower panels) A cut through different mean flow speeds.}
+        \label{Suppresion2}
+\end{figure}
 
 \clearpage
 
 \appendix
+
+\section{Caveats of the RW model}
+
+\subsection{Biases}
+ This is an approximate nature of the RW model, particularly the pulsing of the diffusion, has consequences for estimating diagnostics. For instance, if one estimates the tracer dissipation after the diffusion is applied, then these estimates will be biased low. Conversely, estimating the tracer dissipation before the diffusion is applied leads to a systematic overestimation of the tracer dissipation. Breaking up the steps in smaller substeps alternating advection with diffusion, and calculating the diagnostics before and after the diffusion is applied significantly reduces these biases. Unless otherwise stated, we used the following algorithm for the simulations described here: \\
+
+
+\noindent Twice
+\begin{description}
+\item  $\tfrac{1}{2}$ x-advection
+\item   $\tfrac{1}{4}$ diffusion
+\item   Diagnostics
+\end{description}
+
+\noindent  Twice
+\begin{description}
+\item  $\tfrac{1}{2}$ y-advection
+\item   $\tfrac{1}{4}$ diffusion
+\item   Diagnostics
+\end{description}
+
+We found that in some simulations there is biases related to the pulsing of diffusion significant biases may persist, particularly at relatively large $\kappa$ and shallow velocity spectrum. To understand that consider the advection velocity field $(u,v) = (0,\alpha x)$. This can thought of the y$-$advection/diffusion sub-step with 
+\beq
+\label{adv_alphx}
+\vth_t + \alpha x \vth_y = \kappa \lap \vth\com
+\eeq
+where $\alpha$ is the rate of strain of the flow. Solutions to \eqref{adv_alphx} have the form
+\beq
+\vth(x,y,t) = A_c(t) \ee^{\ii[(k- \alpha l t)x + l y]}\com
+\eeq
+where
+\beq
+A_c(t) = A(0) \exp\{ -\kappa\left[(k^2 + l^2) t -  k l \alpha t^2 + \alpha^2 l^2 t^3/3 \right]\}\per
+\eeq
+Above we used the subscript c to denote that the diffusion is being applied continuously. After a
+substep $\tau/2$ we have
+\beq
+A_c(\tau/2) = A(0) \exp\{-\kappa\left[ (k^2 + l^2) \tau/2 -  k l \alpha \tau^2/4+ \alpha^2 l^2 \tau^3/24 \right]\}\per
+\eeq
+If the diffusion is pulsed instead, we have
+\begin{align}
+A_p(\tau/2) &= A(0) \exp \{ -\kappa \left[ (k - \alpha l \tau/2)^2 + l^2  \right]\tau/2\} \nonumber \\
+&= A(0) \exp\{-\kappa \left[ (k^2 + l^2) \tau/2 -  k l \alpha \tau^2/2+ \alpha^2 l^2 \tau^3/8 \right] \} \per
+\end{align}
+Note that pulsing the diffusion underestimates the solution. In particular,
+\beq
+\frac{A_p}{A_c} = \exp [\kappa l \alpha \tfrac{\tau^2}{2} (k - \alpha l \tau/6) ] \per
+\eeq
+
+\subsection{Numerical diffusion}
+In some simulations there is a remaining bias that we account for in the form of a ``numerical diffusivity''. To estimate this numerical diffusion we consider the global variance budget in initial value problems (IVPs). Figure \ref{EstKappaNum} shows that the decay of variance in IVPs is faster than predicted by the tracer dissipation with molecular diffusivity. Numerical diffusivities  estimated by linear algebra regression are $ 1.1 \kappa$ and $1.8 \kappa$ for $p=4$ and $p=2$, respectively. Accounting for the numerical diffusivity significantly reduces biases in eddy diffusivity estimates (see figure xyz).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=7cm]{figs/EstKappaNump_2.pdf}
+    \includegraphics[width=7cm]{figs/EstKappaNump_4.pdf}
+    \caption{\small Time series of variance tendency and tracer dissipation for simulations of initial value problems with $p=2$ and $p=4$. Note that the decay of the variance decays faster than predicted by the tracer dissipation with molecular diffusivity. }
+		    \label{EstKappaNum}
+\end{figure}
 
 \section{Derivation of Nakamura's Eddy Diffusivity}
 
@@ -533,7 +622,7 @@ so that
     \caption{\small Schematics of the coordinate system defined by the the tracer contour $\vth=\Th$.}
 \end{figure}
 
-The integral of the scalar function $f$ over the surface inside curves $\gamma(\Th+\dd \Th/2)$ and $\gamma(\Th-\dd \Th/2)$ (see figure \ref{SchematicsCoord}) is
+The integral of the scalar function $f$ over the surface within the curves $\gamma(\Th+\dd \Th/2)$ and $\gamma(\Th-\dd \Th/2)$ (see figure \ref{SchematicsCoord}) is
 
 \newcommand{\A}{\p A}
 

@@ -345,11 +345,77 @@ Another important property of this model with constant background tracer gradien
 
 \subsection{Some results}
 
-Here we present results from two simulations akin of those figure \ref{Spectra8192} but with coarse resolution ($1024\times1024$).
+Here we present results from two simulations akin of those figure \ref{Spectra8192} but with a little coarser resolution ($4096\times 4096$). Details in table \ref{RWExp}.
+\begin{table}
+\begin{center}
+   \caption{\small Parameter of the RW experiments on a lattice.}
+    \begin{tabular}{  l | l}
+    \hline
+    \hline
+    	Size of the lattice & $n_x = N_y = 4096$\\
+	Domain size & $L_x = L_y = 2 \pi$\\
+	Velocity root-mean-square & $u_{rms} = 1$ \\
+	Small scale diffusivity & $\kappa = 10^{-4} $\\
+	Eddy decorrelation time scale & $\tau = 0.5$ \\
+	Peclet number & \textsf{Pe} $= 5 \times10^3 $\\
+    \hline
+    \end{tabular}
+    \end{center}
+    \label{RWExp}
+        \end{table}
 
 
 
+Figure \eqref{Resultsp2Variance} shows  variance time series for two experiments with the parameters described above but with distinct kinetic energy spectrum: $p=2$ and $p=4$. Both experiments achieve statistical steady state  no later than about 20 renovation cycles --- the diagnostics discussed below are calculated after equilibration. Figure \ref{Resultsp4} shows a snapshot of tracer concentration together with the probability density function of the tracer concentration. Also shown in figure
+  \ref{Resultsp4} are the kinetic energy spectrum and the tracer spectrum ? the latter exhibits an approximate $k^{-1}$ power law characteristics of non-local mixing. Results for the $p=2$ experiments display different properties: the stirring is is local in the range of active stirring and becomes non-local at wavenumbers larger than $k_{max}$ (see the transition in the tracer spectrum in figure \ref{Resultsp2}). The tracer concentration displays much rougher contours and its probability density function is less Gaussian than the one for the $p=4$ experiment.
 
+\begin{figure}[ht]
+    \centering
+            \includegraphics[width=.9\textwidth]{figs/variance_time_series_2_2048.pdf}\\
+                        \includegraphics[width=.9\textwidth]{figs/variance_time_series_4_4096.pdf}\\
+       \caption{\small Results for RW simulation  Results $p=2$ and $p=4$.}
+		    \label{Resultsp2Variance}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+       \includegraphics[width=0.45\textwidth]{figs/tracer_snapshot_p_4_4096.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_ke_spectrum_p_4_4096.pdf}\\
+         \includegraphics[width=0.45\textwidth]{figs/pdf_p_4_4096.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_tracer_spectrum_p_4_4096.pdf}
+       \caption{\small Results for $p=4$ experiment. Snapshot of tracer concentration (top left)  and associated
+       			probability density function (lower left). Kinetic energy spectrum (top right) and 
+			tracer variance spectrum (lower right).}
+		    \label{Resultsp4}
+\end{figure}
+
+
+
+\begin{figure}[ht]
+    \centering
+       \includegraphics[width=0.45\textwidth]{figs/tracer_snapshot_p_2_2048.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_ke_spectrum_p_2_2048.pdf}\\
+         \includegraphics[width=0.45\textwidth]{figs/pdf_p_2_2048.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_tracer_spectrum_p_2_2048.pdf}
+       \caption{\small Results for $p=2$ experiment: Snapshot of tracer concentration (top left)  and associated
+       			probability density function (lower left). Kinetic energy spectrum (top right) and 
+			tracer variance spectrum (lower right).}
+		    \label{Resultsp2}
+\end{figure}
+
+Figure \eqref{VarianceBudgetp4} shows the $x-$averaged tracer variance budget and the estimates of eddy diffusivity.
+The tracer budget is nearly closed (innacuracies are associated with the diffusion pulsing) and it is dominated by the 
+balance between nearly $y-$independent production and dissipation, which are positive and negative definite, respectively. The other terms are smaller and integrate to zero. The estimates of eddy diffusivity are also essentially independent of $y$. The $y-$averaged value of both diffusivities calculated using Osborn-Cox and Nakamura method is about $1\%$ accurate (more averaging and substeps within the renovation cycles could further reduce this inacuracy).
+
+\begin{figure}[ht]
+    \centering
+       \includegraphics[width=0.45\textwidth]{figs/tracer_budget_p_4_4096.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/diffusivity_p_4_4096.pdf}
+       \caption{\small Results for $p=4$ experiment: Tracer variance budget (left) and estimates of eddy diffusivity (right).}
+		    \label{VarianceBudgetp4}
+\end{figure}
+
+\clearpage
 % large scale source
 \subsection{Advection-diffusion with a simple large-scale source}
 
@@ -404,51 +470,41 @@ This limit can be calculated using the L'Hospital rule, simply expanding about $
 
 
 \subsection{Mean tracer concentration}
-For this simple model the $x-$averaged equation is
+The $x-$averaged equation tracer equation is
 \beq
 \label{xave_cos}
-\bvth_t   = \cos k_1 y + D \p_y^2 \bvth\com
+\la\vth\ra_x = \cos k_1 y + (\kappa_e+\kappa) \p_y^2 \la\vth\ra_x\com
 \eeq
-In statistical steady state, averaging either in time or over ensembles, we obtain
+where we used an eddy diffusivity to parameterize the tracer flux with the eddy diffusivity $\kappa_e >>\kappa$. In statistical steady state, averaging either in time or over ensembles, we obtain, to $\mathcal{O}(\kappa/\kappa_e)$,
 \beq
-D \p_y^2\langle \bvth\rangle = -\cos k_1 y\com
+\kappa_e \p_y^2\la \vth\ra_{x,t} = -\cos k_1 y\com
 \eeq
-$\langle\rangle$ denotes either time or ensemble average. Thus,
+Thus,
 \beq
-\langle \bvth \rangle = \frac{\cos k_1 y}{D k_1^2}\per
+\label{pred_vthb}
+\langle \bvth \rangle = \frac{\cos k_1 y}{\kappa_e k_1^2}\per
 \eeq
-For this simple model, we can calculate the effective diffusivity $D$ exactly (Einstein, 1905)
+To obtain a prediction for the mean concentration, we use the the exact eddy diffusivity, given by the Einstein's formula:
 \beq
 \label{einstein_diff}
-D = \frac{\langle (\dx)^2 \rangle}{2 \tau}\com
-\eeq
-where $\langle (\dx)^2 \rangle$ is the mean-square displacement. Intrinsic in the derivation of
-\eqref{einstein_diff} is the scale separation between the flow that performs the  advection
-and the large-scale gradient. In the generalized RW model, we have
-\beq
-\langle (\dx)^2 \rangle = \langle u_n^2 \tau^2\rangle = \frac{u_{rms}^2 (\dt)^2}{4}\com
-\eeq
-and therefore
-\beq
-\label{Dein}
-D = \frac{u_{rms}^2 \tau}{4}\per
+\kappa_{ein} = \frac{\langle (\dx)^2 \rangle}{2 \tau}=\frac{u_{rms}^2 \tau}{4}\per
 \eeq
 
-Figure \ref{p35} shows a comparison between theory, using Einstein's effective difusivity
-\eqref{Dein}, and numerical calculation on the lattice model. With scale separation, there
-is spectacular agreement between theory and numerics (see Figure \ref{p35} left). Even
-the $x-$averaged concentration of snapshots is reasonably consistent with the theoretical prediction.
-Without scale separation, there is still reasonable consistency, but the spread about the time-mean
-is much larger.
+
+Figure \ref{p35} shows a comparison between the prediction given by \eqref{pred_vthb} and numerical results from RW simulations. With enough scale separation between the large scale source and the eddies, there
+is spectacular agreement between theory and numerics, independent of the slope of the kinetic energy spectrum (see figure \ref{p35} top). Even without scale separation (i.e., when eddy diffusivity is not formally justified),
+ the time average of the $x-$averaged tracer concentration is reasonably consistent with the theoretical prediction. However, the are visible discrepancies between snapshots of $x-$averaged tracer concentration and the theoretical prediction; the discrepancies between snapshot and theory are larger with steep kinetic energy spectral slope since there is less self-averaging performed by the $x-$averaged operation.
+
 
 \begin{figure}[ht]
-    \label{p35}
     \centering
-    \includegraphics[width=7cm]{figs/x-averaged_tracer_nmin_5.png}
-    \includegraphics[width=7cm]{figs/x-averaged_tracer_nmin_1.png}
-    \caption{$x-$averaged tracer concentration simulated with $N_x = N_y = 1024$, $L_x = L_y = 2 \pi$, 
-        $n_{min}=5$ (left) and $n_{min}=1$(right), $n_{max}=1024$, and $p=1024$. The magenta line represents time-averaged 
-            and the thin gray lines represent snapshots. The blue line is the theoretical prediction.}
+    \includegraphics[width=.45\textwidth]{figs/meansource_p_4_nmin_5.pdf}
+     \includegraphics[width=.45\textwidth]{figs/meansource_p_2_nmin_5.pdf}\\
+    \includegraphics[width=.45\textwidth]{figs/meansource_p_4_nmin_1.pdf}
+     \includegraphics[width=.45\textwidth]{figs/meansource_p_2_nmin_1.pdf}\\
+    \caption{$x-$averaged tracer concentration simulated in $512\times 512$ RW simulation with $\kappa = 5 \times 10^{-4}$. 
+        with $j_{min}=5$ (top) and $j_{min}=1$(bottom).}
+            \label{p35}
 \end{figure}
 
 \
@@ -482,7 +538,7 @@ We can then define the nondimensional parameter
 \label{betah}
 \beta(U,p,j_{min},j_{max}) = \frac{C^2 \sum_j \left(\frac{j}{j_{min}}\right)^{-p}\left(\frac{1-\cos(U k \tau/2)}{(U k)^2}\right)}{u_{rms}^2 \frac{\tau^2}{2}} =  \frac{2  \sum_j \left(\frac{j}{j_{min}}\right)^{-p}\left(\frac{1-\cos(U k \tau/2)}{(U k \tau/2)^2}\right)}{\sum_j \left(\frac{j}{j_{min}}\right)^{-p}} \com
 \eeq
-which is a measure of suppression (no suppression with $\beta=1$, full suppression with $\beta=0$).  Figure \ref{Supression}
+which is a measure of suppression (no suppression with $\beta=1$, full suppression with $\beta=0$).  Figure \ref{Suppresion}
 shows $\beta$ as a function of the mean flow speed $U$ and the kinetic energy spectrum exponent  $p$ for different maximum
 wavenumber $j_{max}$. Flows with shallow kinetic energy spectrum are significantly suppressed by the mean flow. This is 
 because for these flows, the small scales dominate the stirring, but the small scale eddies are significantly sweep by the mean flow. In this local stirring regime, the relevant bulk non-dimensional number is
@@ -530,6 +586,21 @@ where $k = 2\pi j /L_x $, and $p$ is prescribed. Consistent with the discussion 
         \label{Suppresion2}
 \end{figure}
 
+
+\section{RW revisited: spectral solutions}
+Here we solve the advection-diffusion equation in a double periodic domain marching forward with fourth-order time stepper.
+The main difference between this approach and the lattice model in Section 2 is that the diffusion is applied continuously instead of pulses. Indeed, an exponential time difference scheme, the diffusion is exact. As discussed in appendix A, the pulsing of the diffusion is the main source of error in the lattice model. This significantly reduces the numerical error rendering the overall solution and diagnostics more accurate (see figure \ref{KappaNum_spectral_4.}). The main downside of this approach are the problems associated with numerical stability of the time marching scheme. In particular, for the experiment discussed here, numerical stability requires about $200$ timesteps renovation cycles. 
+
+ \begin{figure}[ht]
+    \centering
+    \includegraphics[width=.6\textwidth]{figs/EstKappaNump_4_spectral.pdf}
+    \caption{\small Time series of variance tendency and dissipation in a RW initial value problem advected spectrally
+    and marched forward using a ETD-RK4 scheme.There is visually no difference between the two curves (Numerical diffusion
+    in these solutions are rather insignificant).}
+        \label{KappaNum_spectral_4}
+\end{figure}
+
+% appendices follow
 \clearpage
 
 \appendix
@@ -577,7 +648,7 @@ If the diffusion is pulsed instead, we have
 A_p(\tau/2) &= A(0) \exp \{ -\kappa \left[ (k - \alpha l \tau/2)^2 + l^2  \right]\tau/2\} \nonumber \\
 &= A(0) \exp\{-\kappa \left[ (k^2 + l^2) \tau/2 -  k l \alpha \tau^2/2+ \alpha^2 l^2 \tau^3/8 \right] \} \per
 \end{align}
-Note that pulsing the diffusion underestimates the solution. In particular,
+Note that pulsing the diffusion can underestimate or overestimate the solution. In particular,
 \beq
 \frac{A_p}{A_c} = \exp [\kappa l \alpha \tfrac{\tau^2}{2} (k - \alpha l \tau/6) ] \per
 \eeq
@@ -593,9 +664,16 @@ In some simulations there is a remaining bias that we account for in the form of
 		    \label{EstKappaNum}
 \end{figure}
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figs/SensKappa_p_4}
+    \caption{\small Sensitivity of eddy diffusivity estimates with steep kinetic energy spectrum $p=4$ to small scale diffusivity.}
+		    \label{SensKappa}
+\end{figure}
+
 \section{Derivation of Nakamura's Eddy Diffusivity}
 
-The Nakamura effective diffusivity arises when transforming the diffusion equation into a area/contour coordinate system, i.e. A = $A(\Th,t)$, where $A$ is the area bounded by the contour $\Th$ at time $t$. Because the area bounded by a contour $\Th$ is a well-defined graph, i.e. $\Th = \Th(A,t)$ (see figure \ref{SnapAndCDF}), we have
+The Nakamura effective diffusivity arises when transforming the diffusion equation into a area/contour coordinate system, i.e. A = $A(\Th,t)$, where $A$ is the area bounded by the contour $\Th$ at time $t$. Because the area bounded by a contour $\Th$ is a well-defined graph, i.e. $\Th = \Th(A,t)$ (see figure \ref{SnapAndCDF}), we have\footnote{It is very important to keep track of the difference between the tracer field $\vth$ and tracer contours defined by the \textit{label} $\vth = \Th$. It is irritating that a third of the oceanographic literature in this topic systematically confused $\vth$ with $\Th$ in their derivations. Another third randomly makes the same confusion. The last third only  occasionaly changes a $\vth$ with $\Th$.}
 \beq
 \Th = \vth[A(\Th,t),t]\com
 \eeq
@@ -622,7 +700,7 @@ so that
     \caption{\small Schematics of the coordinate system defined by the the tracer contour $\vth=\Th$.}
 \end{figure}
 
-The integral of the scalar function $f$ over the surface within the curves $\gamma(\Th+\dd \Th/2)$ and $\gamma(\Th-\dd \Th/2)$ (see figure \ref{SchematicsCoord}) is
+The integral of the scalar function $f$ over the surface within the curves $\gamma(\Th+\dd \Th/2)$ and $\gamma(\Th-\dd \Th/2)$ (see figure \ref{SchematicsCoord}) is\footnote{We can also use the fundamental theorem of calculus  to obtain $ I_\Th(f) =\int_{\vth\leq\Th }\oint_{\gamma} f \frac{\dd l}{|\nabla \vth|} $.}
 
 \newcommand{\A}{\p A}
 
@@ -667,7 +745,7 @@ Thus, using the advection-diffusion equation \eqref{ad}, we obtain
 \end{align}
 Now using \eqref{useful_relations} we obtain
 \begin{align}
-\frac{\p \vth}{\p t} &= \kappa \frac{\p}{\p A} \iint \lap \vth \dd A + \frac{\p }{\p A} \iint S  \dd A \nonumber\\
+\frac{\p \vth}{\p t} &= \kappa \frac{\p}{\p A} \iint_{\p A} \lap \vth \dd A + \frac{\p }{\p A} \iint_{\p A} S  \dd A \nonumber\\
                      &= \frac{\p}{\p A}\left(K_n(A,t) \frac{\p \vth}{\p A}\right) + \langle S \rangle_\Th\com
 \end{align}
 where the effective diffusivity  is
@@ -683,14 +761,15 @@ Note that the effective diffusivity has units of (length)$^4$$\times$(time)$^{-1
 \label{knak}
 \kappaN(\Th,t) = \frac{K_e}{L_{min}^2} = \frac{L_{eq}^2}{L_{min}^2}\kappa\com
 \eeq
-where the equivalent length is
+where the ``equivalent length'' is
 \beq
 \label{Leq}
 L_{eq}^2 \defn \oint_\gamma \frac{\dd l}{|\nabla \vth|} \oint_\gamma |\nabla \vth| \dd l \com
 \eeq
-and $L_{min}$ is the minimum length of the contour (without distortion by eddies). In simple domain such as periodic channel,
+and $L_{min}$ is the minimum  (unstrained) length of the contour. In simple domain such as periodic channel,
  $L_{min}$ is unambiguously defined as the length of the channel. In more complicated realistic geometry and source functions, the definition of $L_{min}$ may not be straightforward. In practice, one can estimate $L_{min}$ by calculating $L_{eq}$ in simulations with large Peclet number ($\kappaN \to \kappa$). 
-A lower bound on \eqref{Leq} is obtained using the Cauchy-Schwartz inequality\footnote{$\oint_\gamma f^2 \dd l \oint_\gamma g^2 \dd l \ge \left(\oint_\gamma f\,g \,\dd l\right)^2.$}:
+In the oceanographic literature  $L_{eq}$ is commonly mistaken by the length of the contour (e.g., Ferrari and Nikurashin, 2010). This is only true if $|\nabla \vth |$ is constant, and represents a lower bound on $L_{eq}$, obtained using the Cauchy-Schwartz inequality\footnote{$\oint_\gamma f^2 \dd l \oint_\gamma g^2 \dd l \ge \left(\oint_\gamma f\,g \,\dd l\right)^2.$}:
+
 \beq
 L_{eq}^2 \ge L^2 = \Big(\oint_\gamma \dd l \Big)^2\per
 \eeq
@@ -713,7 +792,7 @@ where $\delta I_\theta(f)$ is the approximate area integral of $f$ within the co
     \centering
     \includegraphics[width=7.5cm]{figs/sensitivity_kappaN_dtheta.pdf}
         \includegraphics[width=7.5cm]{figs/sensitivity_kappaN_mean_dtheta.pdf}\\
-    \caption{\small Sensitivity of the Nakamura diffusivity estimate to the contour spacing $\dd \Th$. In this example, the Nakamura eddy diffusivity was computed for a single snapshot in Figure \ref{SnapAndCDF} a.}
+    \caption{\small Sensitivity of the Nakamura diffusivity estimate to the contour spacing $\dd \Th$. In this example, the Nakamura eddy diffusivity was computed for a single snapshot in Figure \ref{SnapAndCDF}a.}
         \label{SensitivitykNdTh}
 \end{figure}
   

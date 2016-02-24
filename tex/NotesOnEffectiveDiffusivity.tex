@@ -327,7 +327,7 @@ We now diagnose eddy diffusivities using both Osborn-Cox and Nakamura methods in
 In the RW model we have
 \beq
 \label{dxdt}
-\frac{\dd x}{\dd t} = u(y)\com
+\dot x = u(y)\com
 \eeq
 with $u(y)$ given by the series \eqref{un}. Hence
 \beq
@@ -593,7 +593,8 @@ The main difference between this approach and the lattice model in Section 2 is 
 
  \begin{figure}[ht]
     \centering
-    \includegraphics[width=.6\textwidth]{figs/EstKappaNump_4_spectral.pdf}
+    \includegraphics[width=.45\textwidth]{figs/EstKappaNump_4_spectral.pdf}
+        \includegraphics[width=.45\textwidth]{figs/EstKappaNump_2_spectral.pdf}
     \caption{\small Time series of variance tendency and dissipation in a RW initial value problem advected spectrally
     and marched forward using a ETD-RK4 scheme.There is visually no difference between the two curves (Numerical diffusion
     in these solutions are rather insignificant).}
@@ -764,9 +765,24 @@ Note that the effective diffusivity has units of (length)$^4$$\times$(time)$^{-1
 where the ``equivalent length'' is
 \beq
 \label{Leq}
-L_{eq}^2 \defn \oint_\gamma \frac{\dd l}{|\nabla \vth|} \oint_\gamma |\nabla \vth| \dd l \com
+L_{eq}^2 \defn \underbrace{\oint_\gamma \frac{\dd l}{|\nabla \vth|}}_{\defn I_2} \underbrace{\oint_\gamma |\nabla \vth| \dd l}_{\defn I_1} \com
 \eeq
-and $L_{min}$ is the minimum  (unstrained) length of the contour. In simple domain such as periodic channel,
+where the alternative expressions (useful for numerical computations) for the integrals are
+\beq
+I_2 = \frac{\p}{\p \Th} \iint_{\p A}  \dd x \dd y \com \qquad \text{and} \qquad I_1 = \frac{\p}{\p \Th} \iint_{\p A} |\nabla \vth|^2  \dd x \dd y\com
+\eeq
+Note that $\kappa I_1$ is proportional to the dissipation rate within contours.
+
+ \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.45\textwidth]{figs/I1I2_p_4_nmin_2.pdf}
+     \includegraphics[width=0.45\textwidth]{figs/I1I2_p_2_nmin_2.pdf}
+    \caption{\small Numerical estimates of the integral $I_1$ and $I_2$ as a function of the small scale
+    			diffusivity. These integrals are based only}
+        \label{SensitivitykNdTh}
+\end{figure}
+
+Also in \eqref{knak}, $L_{min}$ is the minimum  (unstrained) length of the contour. In simple domains such as a periodic channel,
  $L_{min}$ is unambiguously defined as the length of the channel. In more complicated realistic geometry and source functions, the definition of $L_{min}$ may not be straightforward. In practice, one can estimate $L_{min}$ by calculating $L_{eq}$ in simulations with large Peclet number ($\kappaN \to \kappa$). 
 In the oceanographic literature  $L_{eq}$ is commonly mistaken by the length of the contour (e.g., Ferrari and Nikurashin, 2010). This is only true if $|\nabla \vth |$ is constant, and represents a lower bound on $L_{eq}$, obtained using the Cauchy-Schwartz inequality\footnote{$\oint_\gamma f^2 \dd l \oint_\gamma g^2 \dd l \ge \left(\oint_\gamma f\,g \,\dd l\right)^2.$}:
 

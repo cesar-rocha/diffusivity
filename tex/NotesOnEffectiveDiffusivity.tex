@@ -371,9 +371,10 @@ Figure \eqref{Resultsp2Variance} shows  variance time series for two experiments
 
 \begin{figure}[ht]
     \centering
-            \includegraphics[width=.9\textwidth]{figs/variance_time_series_2_2048.pdf}\\
-                        \includegraphics[width=.9\textwidth]{figs/variance_time_series_4_4096.pdf}\\
-       \caption{\small Results for RW simulation  Results $p=2$ and $p=4$.}
+            \includegraphics[width=.9\textwidth]{figs/variance_time_series_2_4096.pdf}\\
+                        \includegraphics[width=.9\textwidth]{figs/variance_time_series_4_4096.pdf}
+       \caption{\small Results for RW simulations with $p=2$ and $p=4$. Notice the difference between
+       			       the variance level in the two experiments.}
 		    \label{Resultsp2Variance}
 \end{figure}
 
@@ -393,10 +394,10 @@ Figure \eqref{Resultsp2Variance} shows  variance time series for two experiments
 
 \begin{figure}[ht]
     \centering
-       \includegraphics[width=0.45\textwidth]{figs/tracer_snapshot_p_2_2048.pdf}
-       \includegraphics[width=0.45\textwidth]{figs/wavenumber_ke_spectrum_p_2_2048.pdf}\\
-         \includegraphics[width=0.45\textwidth]{figs/pdf_p_2_2048.pdf}
-       \includegraphics[width=0.45\textwidth]{figs/wavenumber_tracer_spectrum_p_2_2048.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/tracer_snapshot_p_2_4096.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_ke_spectrum_p_2_4096.pdf}\\
+         \includegraphics[width=0.45\textwidth]{figs/pdf_p_2_4096.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/wavenumber_tracer_spectrum_p_2_4096.pdf}
        \caption{\small Results for $p=2$ experiment: Snapshot of tracer concentration (top left)  and associated
        			probability density function (lower left). Kinetic energy spectrum (top right) and 
 			tracer variance spectrum (lower right).}
@@ -405,7 +406,7 @@ Figure \eqref{Resultsp2Variance} shows  variance time series for two experiments
 
 Figure \eqref{VarianceBudgetp4} shows the $x-$averaged tracer variance budget and the estimates of eddy diffusivity.
 The tracer budget is nearly closed (innacuracies are associated with the diffusion pulsing) and it is dominated by the 
-balance between nearly $y-$independent production and dissipation, which are positive and negative definite, respectively. The other terms are smaller and integrate to zero. The estimates of eddy diffusivity are also essentially independent of $y$. The $y-$averaged value of both diffusivities calculated using Osborn-Cox and Nakamura method is about $1\%$ accurate (more averaging and substeps within the renovation cycles could further reduce this inacuracy).
+balance between nearly $y-$independent production and dissipation, which are positive and negative definite, respectively. The other terms are smaller and integrate to zero. The estimates of eddy diffusivity are also essentially independent of $y$. The $y-$averaged value of both diffusivities calculated using Osborn-Cox and Nakamura method is about $1\%$ accurate (more averaging and substeps within the renovation cycles could further reduce this inacuracy). Figure \ref{VarianceBudgetp2} shows the tracer budget and eddy diffusivity for the $p=2$ experiment. While in the $p=2$ experiment the equilibrated tracer variance is about five times smaller than the variance in $p=4$ experiment, the the production and dissipation rates are are the same (hence the same eddy diffusivity).
 
 \begin{figure}[ht]
     \centering
@@ -414,6 +415,17 @@ balance between nearly $y-$independent production and dissipation, which are pos
        \caption{\small Results for $p=4$ experiment: Tracer variance budget (left) and estimates of eddy diffusivity (right).}
 		    \label{VarianceBudgetp4}
 \end{figure}
+
+\begin{figure}[ht]
+    \centering
+       \includegraphics[width=0.45\textwidth]{figs/tracer_budget_p_2_4096.pdf}
+       \includegraphics[width=0.45\textwidth]{figs/diffusivity_p_2_4096.pdf}
+       \caption{\small Results for $p=2$ experiment: Tracer variance budget (left) and estimates of eddy diffusivity (right).}
+		    \label{VarianceBudgetp2}
+\end{figure}
+
+
+
 
 \clearpage
 % large scale source
@@ -730,7 +742,7 @@ With the results above, we are ready to transform the advection-diffusion equati
 \beq
 A_t =  \oint_\gamma \vu_c \cdot \hat{\vn} \, \dd l\com
 \eeq
-where the velocity of the contour, locally normal to the contour, is defined by
+where the velocity of the contour, locally normal to the contour, is defined by\footnote{Note that for the contour $\Th = \vth[\bold{x}(t),t]$ we have $\vth_t + \vu_c \cdot \nabla \vth = 0$, where $\vu_c \defn \dd \bold{x} / \dd t$.}
 \beq
 \vu_c = - \theta_t \frac{\nabla \theta}{|\nabla \theta|^2} = -  \frac{\theta_t}{|\nabla \theta|}\hat{\vn}\per
 \eeq
@@ -771,7 +783,7 @@ where the alternative expressions (useful for numerical computations) for the in
 \beq
 I_2 = \frac{\p}{\p \Th} \iint_{\p A}  \dd x \dd y \com \qquad \text{and} \qquad I_1 = \frac{\p}{\p \Th} \iint_{\p A} |\nabla \vth|^2  \dd x \dd y\com
 \eeq
-Note that $\kappa I_1$ is proportional to the dissipation rate within contours.
+Note that $\kappa I_1$ is proportional to the dissipation rate within contours. The tracer dissipation rate, averaged along the contours, is what mainly determines the eddy diffusivity. The integral $I_2$ is merely a constant determined by the geometry of the problem.
 
  \begin{figure}[ht]
     \centering

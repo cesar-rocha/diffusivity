@@ -339,7 +339,7 @@ Thus
 \label{einstein_eddy_diffusivity}
 \kappa_{ein} = \frac{u_{rms}^2 \tau}{4}\per
 \eeq 
-Of course, in this case, the isotropic velocity field implies $\la (\Delta y)^2\ra = \la (\Delta y)^2\ra$ and the diffusivity is independent of direction.
+Of course, in this case, the isotropic velocity field implies $\la (\Delta x)^2\ra = \la (\Delta y)^2\ra$ and the diffusivity is independent of direction.
 
 Another important property of this model with constant background tracer gradient is that the scale separation between the mean tracer concentration and perturbations is infinite, and therefore the eddy diffusion closure is well justified.
 
@@ -438,7 +438,14 @@ balance between nearly $y-$independent production and dissipation, which are pos
 \end{figure}
 
 
-
+While the eddy transport is the same, the tracer variance is much large in the $p=4$ simulation. We can write
+the eddy tracer as
+\beq
+\la v' \vth' \ra_{xt} = \alpha(p) v_{rms} \vth'_{rms}(p)\com
+\eeq
+where $\alpha(p)$ is a correlation coefficient. Since $v_{rms}$ is prescribed as the same in both simulations,
+both the correlation coefficient $\alpha$ and the tracer rms $\vth'_{rms}$ are functions of the spectral
+exponent $p$. In particular, the results suggest that $\alpha$ be increasing larger for smaller $p$.
 
 \clearpage
 % large scale source
